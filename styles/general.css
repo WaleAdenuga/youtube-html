@@ -1,0 +1,20 @@
+/* for general parts of the webpage */
+p {
+    /* if whatever reason roboto fails to load, it'll fall back to arial */
+    /* font-family: Roboto, Arial; */
+    /* remove default margins for paragraphs */
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+/* by default, margin has 8px */
+body {
+    height: 5000px;
+    margin: 0;
+    padding-top: 80px;
+    padding-left: 98px;
+    padding-right: 24px;
+    background-color: rgb(249, 246, 246);
+    /* every element inherits roboto (since they're all in the body) */
+    font-family: Roboto, Arial;
+}

@@ -1,0 +1,35 @@
+.sidebar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    top: 55px;
+    background-color: white;
+    width: 70px;
+    /* let sidebar cover header, recall to do that, set a higher z index */
+    z-index: 1000;
+    padding: 5px;
+}
+
+.sidebar-link {
+    height: 74px;
+    display: flex;
+    /* set to display vertically and recall justify is for the primary axis, and align items for secondary axis */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sidebar-link:hover {
+    background-color: rgb(222, 222, 222);
+}
+
+/* this means we're targetting all img inside sidebar-link */
+.sidebar-link img {
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+.sidebar-link div {
+    font-size: 10px;
+}
