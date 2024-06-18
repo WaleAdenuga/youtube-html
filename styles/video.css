@@ -22,8 +22,8 @@ p {
 
 
 /* .video-author, .video-stats {
-    /* force to take only the space it needs 
-    display: inline-block; 
+    /* force to take only the space it needs
+    display: inline-block;
   } */
 
 .video-preview {
@@ -99,7 +99,7 @@ p {
     /* style set on outer div carries to all othere inner ones but caution, not all styles are affected by this */
     /* inheritance mainly works with text, not border, margin or padding */
     /* text-decoration: underline; */
-    
+
 }
 
 /* make video grid responsive (adjusts with different browser size)
@@ -124,6 +124,13 @@ we use media queries for that */
 @media (min-width: 1000px) {
     .video-grid {
         grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    .video-title {
+        font-size: 16px;
+        line-height: 24px;
+    }
+    body {
+        font-size: 14px;
     }
 }
 
