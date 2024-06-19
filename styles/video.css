@@ -8,6 +8,7 @@ p {
 .thumbnail {
     /* when you set the width, it automatically sets the height to keep its shape */
     width: 100%;
+    cursor: pointer;
     /* height: 300px; */
 
     /* contain makes the image shrink until it contains the area provided
@@ -66,6 +67,10 @@ p {
     font-weight: 500;
     line-height: 20px;
     margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.thumbnail-row {
     cursor: pointer;
 }
 
