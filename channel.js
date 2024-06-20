@@ -12,6 +12,35 @@ class Channel {
         this.snippet = channelDetails.snippet;
         this.statistics = channelDetails.statistics;
     };
+
+    formatTooltipSubscriberCount() {
+        let count = parseInt(this.statistics.subscriberCount, 10);
+        if (count >= 1000000) {
+            return (count / 1000000).toFixed(0) + 'M';
+        } else if (count >= 1000) {
+            return (count / 1000).toFixed(0) + 'K';
+        } else {
+            return count.toString();
+        }
+    }
+
+    loadChannelCustomUrl() {
+        if (this.snippet.thumbnails.high) {
+            return this.snippet.thumbnails.high.url;
+        } else if (this.snippet.thumbnails.medium) {
+            return this.snippet.thumbnails.medium.url;
+        } else if (this.snippet.thumbnails.default) {
+            return this.snippet.thumbnails.default.url;
+        } else if (this.snippet.thumbnails.standard) {
+            return this.snippet.thumbnails.standard.url;
+        } else if (this.snippet.thumbnails.maxres) {
+            return this.snippet.thumbnails.maxres.url;
+        }
+    }
+
+    loadChannelPicture() {
+        return this.snippet.thumbnails.default.url;
+    }
 }
 
 export async function loadChannelInfo(channelId) {

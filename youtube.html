@@ -26,80 +26,11 @@
   <!-- semantic elements are the same as div, they just give new meaning and help out screen readers -->
 
   <header class="header">
-
-    <div class="left-section">
-      <img class="hamburger-menu" src="icons/hamburger-menu.svg"> 
-      <img src="icons/youtube-logo.svg" class="youtube-logo">
-    </div>
-
-    <div class="middle-section">
-      <!-- to create a textbox -->
-      <input class="search-bar js-search-bar" type="text" placeholder="Search">
-
-      <!-- put position absolute inside position tooltip to create tooltip -->
-      <button class="search-button js-search-button">
-        <img class="search-icon" src="icons/search.svg">
-        <div class="tooltip">Search</div>
-      </button>
-
-      <button class="voice-search-button">
-        <img class="voice-search-icon" src="icons/voice-search-icon.svg">
-        <div class="tooltip">Search with your voice</div>
-      </button>
-
-    </div>
-
-    <div class="right-section">
-
-      <div class="upload-icon-container">
-        <img class="upload-icon" src="icons/upload.svg">
-        <div class="tooltip">Create</div>
-      </div>
-      
-      <div class="youtube-apps-container">
-        <img class="youtube-apps-icon" src="icons/youtube-apps.svg">
-        <div class="tooltip">YouTube Apps</div>
-      </div>
-
-
-      <div class="notifications-icon-container">
-        <img class="notifications-icon" src="icons/notifications.svg">
-        <div class="notification-count">
-          3
-        </div>
-        <div class="tooltip">Notifications</div>
-      </div>
-      <img class="current-user-picture" src="channel-pictures/my-channel.jpeg">
-    </div>
-    
   </header>
 
   <!-- replace div with nav -->
   <nav class="sidebar">
-    <div class="sidebar-link">
-      <img src="icons/home.svg">
-      <div>Home</div>
-    </div>
-    <div class="sidebar-link">
-      <img src="icons/explore.svg">
-      <div>Explore</div>
-    </div>
-    <div class="sidebar-link">
-      <img src="icons/subscriptions.svg">
-      <div>Subscriptions</div>
-    </div>
-    <div class="sidebar-link">
-      <img src="icons/originals.svg">
-      <div>Originals</div>
-    </div>
-    <div class="sidebar-link">
-      <img src="icons/youtube-music.svg">
-      <div>Youtube Music</div>
-    </div>
-    <div class="sidebar-link">
-      <img src="icons/library.svg">
-      <div>Library</div>
-    </div>
+    
   </nav>
 
   <!-- in html, there are 3 elements
@@ -119,6 +50,7 @@ div can contain any other element inside-->
     </section>
   </main>
   
+  <script src="general-layout/header.js" type="module"></script>
   <script src="youtube.js" type="module"></script>
   <script src="channel.js" type="module"></script>
   <script src="https://unpkg.com/moment"></script>

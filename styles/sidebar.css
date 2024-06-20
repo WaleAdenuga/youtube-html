@@ -6,7 +6,7 @@
         bottom: 0;
         top: 55px;
         background-color: white;
-        width: 70px;
+        width: 72px;
         /* let sidebar cover header, recall to do that, set a higher z index */
         z-index: 1000;
         padding: 5px;

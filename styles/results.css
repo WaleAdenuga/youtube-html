@@ -1,0 +1,91 @@
+h3 {
+    margin-top: 0px;
+    margin-bottom: 3px;
+    font-family: Roboto, Arial;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+div {
+    font-family: Roboto, Arial;
+}
+
+p {
+    font-family: Roboto, Arial;
+}
+
+.result-video-container {
+    display: flex;
+    flex-direction: row;
+    /* space between means item will have space between them */
+    /* justify-content: space-between; */
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.result-thumbnail {
+    background-color: transparent;
+    height: 200px;
+    width: 360px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-right: 16px;
+}
+
+.search-video-stats {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.search-video-channel-info {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
+    padding-bottom: 12px;
+    padding-top: 12px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.search-video-channel-profile-pic {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    padding-right: 8px;
+    cursor: pointer;
+}
+
+.search-video-description {
+    font-size: 14px;
+    font-weight: 400;
+    padding-top: 12px;
+    padding-bottom: 12px;
+
+}
+
+/* activates when screen size hits 1000px */
+@media (min-width: 1000px) {
+    .result-thumbnail {
+        height: 300px;
+        width: 500px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-right: 16px;
+    }
+
+    .result-video-container {
+        /* margin: 0; */
+        padding-left: 100px;
+        padding-right: 35px;
+        background-color: rgb(249, 246, 246);
+        /* every element inherits roboto (since they're all in the body) */
+        font-family: Roboto, Arial;
+    }
+}
+
+
+/* .result-thumbnail:hover {
+    transform: scale(1.05);
+} */
+

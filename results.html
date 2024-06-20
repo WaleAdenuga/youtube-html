@@ -1,11 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Search</title>
+    <link href="styles/general.css" rel="stylesheet">
+    <link href="styles/header.css" rel="stylesheet">
+    <link href="styles/video.css" rel="stylesheet">
+    <link href="styles/sidebar.css" rel="stylesheet">
+    <link href="styles/results.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+
 </head>
+
 <body>
-    
+    <header class="header js-header">
+    </header>
+
+    <!-- replace div with nav -->
+    <nav class="sidebar js-sidebar">
+    </nav>
+
+    <main>
+        <div class="result-video-container">
+
+            <div class="result-video-thumbnail">
+                <a href="https://www.youtube.com/watch?v=UI6OVJueNUY">
+                    <img class="result-thumbnail" src="thumbnails/hq720.webp">
+                </a>
+            </div>
+
+            <div class="search-video-info">
+                <div class="search-video-title">
+                    <a href="https://www.youtube.com/watch?v=UI6OVJueNUY">
+                        <h3>
+                            🚨 O&#39;Hara LOSES IT With Caller Who Wants TO DROP Saka
+                        </h3>
+                    </a>
+
+                </div>
+                <div class="search-video-stats">
+                    <p>49K views &#183; 15 hours ago</p>
+                </div>
+                <div>
+                    <a href="https://www.youtube.com/@talkSPORT" class="search-video-channel-info">
+                        <img class="search-video-channel-profile-pic" src="icons/channels4_profile.jpg">
+
+                        <div class="search-video-channel-name">
+                            <p>talkSPORT</p>
+                        </div>
+                    </a>
+                    
+                </div>
+                <div class="search-video-description">
+
+                    <a href="https://www.youtube.com/watch?v=UI6OVJueNUY">
+                        <p>Jamie O'Hara clashes with Heathrow Rich The Arsenal fan who wants Bukayo Saka DROPPED for England vs Denmark?</p>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="results.js" type="module"></script>
+    <script src="general-layout/header.js" type="module"></script>
 </body>
+
 </html>
