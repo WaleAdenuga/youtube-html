@@ -1,4 +1,5 @@
-export function renderHeader() {
+export function renderHeader(searchValue) {
+    console.log(searchValue);
     let headerHTML = `
     <div class="left-section">
         <img class="hamburger-menu" src="icons/hamburger-menu.svg">
@@ -47,8 +48,35 @@ export function renderHeader() {
 
     `;
 
-    
+    const headerElement = document.querySelector('.js-header');
+    headerElement.innerHTML = headerHTML;
 
-    return headerHTML;
+    const searchBar = document.querySelector('.js-search-bar');
+
+    if (searchValue) {
+        searchBar.value = searchValue;
+        searchBar.style.display = 'block';
+    }
+
+    const searchButton = document.querySelector('.js-search-button');
+
+    searchButton.addEventListener('click', () => {
+        sendRequest(searchBar.value);
+    });
+    searchBar.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && searchBar.value) {
+            sendRequest(searchBar.value);
+        }
+    });
 }
+
+async function sendRequest(value) {
+    window.location.href = `results.html?search-query=${checkAndReplaceWhitespace(value)}`;
+}
+
+function checkAndReplaceWhitespace(searchString) {
+    if (searchString.includes(' ')) {
+        return searchString.replace(/ /g, '+'); // use regex to remove whitespace globally
+    } else return searchString;
+} 
 

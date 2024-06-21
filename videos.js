@@ -1,3 +1,4 @@
+import { loadChannelInfo } from "./channel.js";
 export let searchVideos = [];
 export let homeVideos = [];
 
@@ -15,10 +16,19 @@ class Video {
         this.id = videoDetails.id;
         this.snippet = videoDetails.snippet;
         this.contentDetails = videoDetails.contentDetails;
-        this.statistics = videoDetails.statistics;
+        if (videoDetails.statistics) {
+            this.statistics = videoDetails.statistics;
+        } else { 
+            this.loadStatistics().then((response) => {
+                this.statistics = response;
+            })    
+        }
     }
 
-    getId() { return this.id; }
+    getId() {
+        if (this.kind === 'youtube#searchResult') return this.id.videoId;
+        else return this.id;
+    }
 
     formatDatePosted(){
         let at = moment(this.snippet.publishedAt);
@@ -88,12 +98,31 @@ class Video {
         }
     }
 
+    async loadStatistics() {
+        try {
+            const response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${this.getId()}&maxResults=5&regionCode=BE&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`);
+            const data = await response.json();
+            return data.items[0].statistics;
+        } catch (error) {
+            console.log(error);
+        }
+        
+    }
+
     loadTitle() {
         return this.snippet.title;
     }
 
     loadChannelTitle() {
         return this.snippet.channelTitle;
+    }
+
+    loadChannelId () {
+        return this.snippet.channelId;
+    }
+
+    loadVideoDescription() {
+        return this.snippet.description;
     }
 }
 

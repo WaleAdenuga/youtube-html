@@ -7,42 +7,13 @@ let queryString;
 
 try {
     await loadPopularVideos();
-    document.querySelector('.header').innerHTML = renderHeader();
+    renderHeader();
     document.querySelector('.sidebar').innerHTML = renderSidebar();
     renderHomePage();
-
-    const searchButton = document.querySelector('.js-search-button');
-    const searchInput = document.querySelector('.js-search-bar');
-    
-    searchButton.addEventListener('click', () => {
-        sendRequest(searchInput.value);
-    });
-    searchInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            sendRequest(searchInput.value);
-        }
-    });
     
 } catch (error) {
     console.log(error);
 }
-
-async function sendRequest(value) {
-    queryString = checkAndReplaceWhitespace(value);
-    console.log(queryString);
-    try {
-        await loadSearchedVideos(queryString);
-    } catch (error) {
-        console.log(error);
-    }
-    console.log(searchVideos);
-}
-
-function checkAndReplaceWhitespace(searchString) {
-    if (searchString.includes(' ')) {
-        return searchString.replace(/ /g, '%20'); // use regex to remove whitespace globally
-    } else return searchString;
-} 
 
 function renderHomePage() {
     const videoContainer = document.querySelector('.js-video-grid');
@@ -52,8 +23,8 @@ function renderHomePage() {
         const channelInfo = await loadChannelInfo(video.snippet.channelId);
 
         let videoInGrid = document.createElement('div');
-        videoInGrid.classList.add('video-preview');
-        videoInGrid.classList.add('js-video-preview');
+        // videoInGrid.classList.add('video-preview');
+        // videoInGrid.classList.add('js-video-preview');
 
         videoInGrid.innerHTML = 
         `
@@ -70,10 +41,10 @@ function renderHomePage() {
                 <div class="channel-picture">
                     <div class="profile-pic-container">
                         <a href="https://www.youtube.com/${channelInfo.loadChannelCustomUrl()}" target="_blank">
-                            <img class="profile-picture" src="${channelInfo.loadChannelPicture()}">
+                            <img class="profile-picture" src="${channelInfo.loadChannelProfilePicCustomUrl()}">
                         </a>
                         <div class="channel-tooltip">
-                            <img class="tooltip-pic" src="${channelInfo.loadChannelPicture()}">
+                            <img class="tooltip-pic" src="${channelInfo.loadChannelProfilePicCustomUrl()}">
                             <div>
                                 <div class="tooltip-channel-name">${video.loadChannelTitle()}</div>
                                 <div class="tooltip-sub-count">${channelInfo.formatTooltipSubscriberCount()} subscribers</div>

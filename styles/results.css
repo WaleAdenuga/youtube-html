@@ -16,11 +16,29 @@ p {
 
 .result-video-container {
     display: flex;
+    flex-direction: column;
+    /* space between means item will have space between them */
+    /* justify-content: space-between; */
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.result-video-preview {
+    display: flex;
     flex-direction: row;
     /* space between means item will have space between them */
     /* justify-content: space-between; */
     align-items: flex-start;
     cursor: pointer;
+    margin-bottom: 20px;
+
+    /* transition takes two values - what we want to transition and how long to take */
+    transition: opacity 0.15s;
+}
+
+/* simulate container click */
+.result-video-preview:active {
+    opacity: 0.8;
 }
 
 .result-thumbnail {
@@ -32,8 +50,46 @@ p {
     margin-right: 16px;
 }
 
+.search-video-channel-name, .search-video-description {
+    font-size: 13px;
+    font-weight: 400;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-video-channel-name .tooltip, 
+.search-video-description .tooltip {
+    position: absolute;
+    background-color: gray;
+    color: white;
+    padding: 10px 13px 10px 13px;
+    border-radius: 2px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.35s;
+    /* when mouse hovers over tooltip, do nothing */
+    pointer-events: none;
+    /* prevent text from wraping around */
+    white-space: nowrap;
+}
+
+.search-video-channel-name .tooltip {
+    top: -50px;
+}
+
+.search-video-description .tooltip {
+    bottom: -50px;
+}
+
+.search-video-channel-name:hover .tooltip, 
+.search-video-description:hover .tooltip {
+    opacity: 1;
+}
+
 .search-video-stats {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
 }
 
@@ -44,7 +100,7 @@ p {
     align-items: center;
     padding-bottom: 12px;
     padding-top: 12px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
 }
 
@@ -52,12 +108,12 @@ p {
     height: 24px;
     width: 24px;
     border-radius: 50%;
-    padding-right: 8px;
+    margin-right: 8px;
     cursor: pointer;
 }
 
 .search-video-description {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
     padding-top: 12px;
     padding-bottom: 12px;

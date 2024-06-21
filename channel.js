@@ -24,7 +24,7 @@ class Channel {
         }
     }
 
-    loadChannelCustomUrl() {
+    loadChannelProfilePicCustomUrl() {
         if (this.snippet.thumbnails.high) {
             return this.snippet.thumbnails.high.url;
         } else if (this.snippet.thumbnails.medium) {
@@ -38,9 +38,10 @@ class Channel {
         }
     }
 
-    loadChannelPicture() {
-        return this.snippet.thumbnails.default.url;
+    loadChannelCustomUrl() {
+        return this.snippet.customUrl;
     }
+
 }
 
 export async function loadChannelInfo(channelId) {
