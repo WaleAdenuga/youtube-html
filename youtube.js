@@ -1,15 +1,15 @@
 import { loadSearchedVideos, searchVideos, loadPopularVideos, homeVideos } from "./videos.js";
 import { loadChannelInfo } from "./channel.js";
-import { renderHeader } from "./general-layout/header.js"
+import { renderHeaderCases } from "./general-layout/header.js"
 import { renderSidebar } from "./general-layout/sidebar.js";
 
 let queryString;
 
 try {
-    await loadPopularVideos();
-    renderHeader();
+    // await loadPopularVideos();
+    renderHeaderCases();
     document.querySelector('.sidebar').innerHTML = renderSidebar();
-    renderHomePage();
+    // renderHomePage();
     
 } catch (error) {
     console.log(error);

@@ -1,4 +1,4 @@
-import { renderHeader } from "./general-layout/header.js";
+import { renderHeaderCases } from "./general-layout/header.js";
 import { renderSidebar } from "./general-layout/sidebar.js";
 import { loadSearchedVideos, searchVideos } from "./videos.js";
 import { loadChannelInfo } from "./channel.js";
@@ -12,7 +12,7 @@ try {
         searchValue = '';
     }
 
-    renderHeader(searchValue);
+    renderHeaderCases(searchValue);
     
     document.querySelector('.js-sidebar').innerHTML = renderSidebar();    
     await loadSearchedVideos(checkAndReplace(searchValue));

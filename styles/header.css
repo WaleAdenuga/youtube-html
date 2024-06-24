@@ -49,6 +49,19 @@
 
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    margin-right: 20px;
+
+    /* to prevent right from shrinking */
+    flex-shrink: 0;
+}
+
+.upon-sign-in-container {
+    /* background-color: lightblue; */
+    width: 180px;
+
+    display: flex;
+    align-items: center;
     justify-content: space-between;
     margin-right: 20px;
 
@@ -107,8 +120,8 @@
 
 .search-button, 
 .voice-search-button, 
-.upload-icon-container, 
-.youtube-apps-container, 
+.upload-icon-container,
+.settings-icon-container, 
 .notifications-icon-container {
     display: flex;
     justify-content: center;
@@ -124,7 +137,8 @@
 .search-button .tooltip, 
 .voice-search-button .tooltip,
 .upload-icon-container .tooltip, 
-.youtube-apps-container .tooltip, .notifications-icon-container .tooltip {
+.settings-icon-container .tooltip,
+.notifications-icon-container .tooltip {
 
     position: absolute;
     background-color: gray;
@@ -143,9 +157,14 @@
 
 /* target tooltip inside search button ONLY when we hover over it */
 .search-button:hover .tooltip, 
-.voice-search-button:hover .tooltip, .upload-icon-container:hover .tooltip, .youtube-apps-container:hover .tooltip, .notifications-icon-container:hover .tooltip {
+.settings-icon-container:hover .tooltip,
+.voice-search-button:hover .tooltip, .upload-icon-container:hover .tooltip, .notifications-icon-container:hover .tooltip {
     opacity: 1;
 }
+
+/* .settings-icon-container:active {
+    opacity: 0.8;
+} */
 
 .voice-search-button {
     height: 40px;
@@ -160,13 +179,54 @@
 }
 
 
-.upload-icon {
+.upload-icon, .settings-icon {
     height: 24px;
 }
 
-.youtube-apps-icon {
-    height: 24px;
+.sign-in-settings-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* margin-right: 20px; */
 }
+
+.sign-in-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 20px;
+    border-radius: 20px;
+    border-width: .5px;
+    border-color: rgb(226, 226, 226);
+    border-style: solid;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.sign-in-btn:hover {
+    background-color: #daeef6;
+}
+
+.sign-in-btn:active {
+    background-color: #d3d6d6;
+}
+
+.sign-in-icon {
+    height: 24px;
+    background-color: transparent;
+    padding: 5px 7px 5px 7px;
+    /* change the color of a svg */
+    filter: invert(20%) sepia(100%) saturate(2342%) hue-rotate(207deg) brightness(101%) contrast(95%);
+}
+
+.sign-in-text {
+    font-family: Roboto, Arial;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    filter: invert(20%) sepia(100%) saturate(2342%) hue-rotate(207deg) brightness(101%) contrast(95%);
+}
+
 
 .notifications-icon-container {
     position: relative;
