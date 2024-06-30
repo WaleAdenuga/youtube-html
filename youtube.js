@@ -8,7 +8,7 @@ let queryString;
 try {
     await loadPopularVideos();
     renderHeaderCases();
-    document.querySelector('.sidebar').innerHTML = renderSidebar();
+    renderSidebar();
     renderHomePage();
     
 } catch (error) {

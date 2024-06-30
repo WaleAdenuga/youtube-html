@@ -14,7 +14,7 @@ try {
 
     renderHeaderCases(searchValue);
     
-    document.querySelector('.js-sidebar').innerHTML = renderSidebar();    
+    renderSidebar();    
     await loadSearchedVideos(checkAndReplace(searchValue));
     renderResultsPage();
     

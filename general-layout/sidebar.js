@@ -1,7 +1,9 @@
 export function renderSidebar() {
-    return `
+
+  let sidebarHTML = 
+   `
     
-    <div class="sidebar-link">
+    <div class="sidebar-link js-sidebar-home">
       <img src="icons/home.svg">
       <div>Home</div>
     </div>
@@ -26,6 +28,13 @@ export function renderSidebar() {
       <div>Library</div>
     </div>
     
-    `;
+  `;
 
+  const sidebarElement = document.querySelector('.js-sidebar');
+  sidebarElement.innerHTML = sidebarHTML;
+
+  const homeSidebar = document.querySelector('.js-sidebar-home');
+  homeSidebar.addEventListener('click', () => {
+    window.location.href = 'youtube.html';
+  });
 }

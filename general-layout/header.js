@@ -15,7 +15,7 @@ function renderHeader(searchValue) {
     let headerHTML = `
     <div class="left-section">
         <img class="hamburger-menu" src="icons/hamburger-menu.svg">
-        <img src="icons/youtube-logo.svg" class="youtube-logo">
+        <img src="icons/youtube-logo.svg" class="youtube-logo js-youtube-logo">
     </div>
 
     <div class="middle-section">
@@ -54,7 +54,9 @@ function renderHeader(searchValue) {
     const searchButton = document.querySelector('.js-search-button');
 
     searchButton.addEventListener('click', () => {
-        sendRequest(searchBar.value);
+        if (searchBar.value) {
+            sendRequest(searchBar.value);
+        }
     });
     searchBar.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && searchBar.value) {
@@ -74,6 +76,11 @@ function renderHeader(searchValue) {
             makeAuthenticationRequest();
         });
     }
+
+    const youtubeLogo = document.querySelector('.js-youtube-logo');
+    youtubeLogo.addEventListener('click', () => {
+        window.location.href = 'youtube.html';
+    });
 }
 
 async function renderSignedIn(accessToken) {
