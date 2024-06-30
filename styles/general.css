@@ -18,3 +18,12 @@ body {
     /* every element inherits roboto (since they're all in the body) */
     font-family: Roboto, Arial;
 }
+
+/* compensate for dark system theme */
+
+/* @media (prefers-color-scheme: dark) {
+    body {
+        background-color: #000000;
+        color: white;
+    }
+} */

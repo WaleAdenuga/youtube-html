@@ -112,7 +112,7 @@ export function handleAuthResponse() {
     } else {
         console.error('Access token not found in URL fragment');
         // try loging in again?
-        makeAuthenticationRequest();      
+        // makeAuthenticationRequest();      
     }
     
 }

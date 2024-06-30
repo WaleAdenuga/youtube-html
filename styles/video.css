@@ -8,7 +8,7 @@ p {
 .thumbnail {
     /* when you set the width, it automatically sets the height to keep its shape */
     width: 100%;
-    cursor: pointer;
+    /* cursor: pointer; */
     /* height: 300px; */
 
     /* contain makes the image shrink until it contains the area provided
@@ -70,9 +70,9 @@ p {
     cursor: pointer;
 }
 
-.thumbnail-row {
+/* .thumbnail-row {
     cursor: pointer;
-}
+} */
 
 /* remove all stylings from anchor tag */
 .video-title-link, a {
@@ -205,4 +205,43 @@ we use media queries for that */
 .tooltip-sub-count {
     color: rgb(108, 107, 107);
     font-size: 12px;
+}
+
+/* recall you have to wrap overlay in a container for its own settings to take effect */
+.thumbnail-row .video-overlay-container {
+    display: none;
+}
+
+.thumbnail-row:hover .video-overlay-container {
+    display: block;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 3px;
+    right: 0;
+    /* height: 98%; */
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: opacity 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.redirect {
+    background-color: white;
+    color: rgb(3, 126, 167);
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px 10px 5px 10px;
+    margin-bottom: 5px;
+    width: 180px;
+    text-align: center;
+    cursor: pointer;
 }

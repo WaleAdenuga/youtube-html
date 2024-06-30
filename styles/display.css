@@ -1,0 +1,588 @@
+body {
+    min-height: 100vh;
+    min-width: 100vh;
+    margin: 0;
+    padding-top: 90px;
+    padding-left: 24px;
+    padding-right: 24px;
+    background-color: rgb(249, 246, 246);
+    /* every element inherits roboto (since they're all in the body) */
+    font-family: Roboto, Arial;
+}
+button {
+    font-family: Roboto, Arial;
+}
+
+.display-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.primary-display {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    /* space between means item will have space between them */
+    /* justify-content: space-between; */
+    align-items: flex-start;
+    margin-right: 20px;
+}
+
+.video-display-container {
+    width: 100%;
+    height: 450px;
+}
+
+.related-video-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+}
+
+.video-iframe-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.related-thumbnail-row {
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.related-video-time {
+    background-color: black;
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    right: 8px;
+    /* font-family: Roboto, Arial; */
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px;
+    border-radius: 2px;
+}
+
+.related-video-preview {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 5px;
+}
+
+.thumbnail {
+    width: 170px;
+    height: 94px;
+    border-radius: 10px;
+    margin-right: 5px;
+    object-fit: cover;
+}
+
+/* style below the video */
+
+/* contains 2 sections - info on video and comments */
+.below-video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.display-title-container{
+    font-size: 22px;
+    font-family: Roboto, Arial;
+}
+
+.video-information-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.video-stats-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.video-stats-left-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    column-gap: 10px;
+}
+
+/* parts of left section */
+.author-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+}
+
+.author-name {
+    margin: 0px 1px 4px 5px;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.author-sub-count {
+    margin-left: 5px;
+    font-size: 13px;
+    color: rgb(95, 95, 95);
+}
+
+.author-subscribe-button {
+    align-self: center;
+    background-color: black;
+    padding: 12px 17px 12px 17px;
+    color: white;
+    border-radius: 20px;
+    height: 100%;
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Roboto, Arial;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.author-subscribe-button:hover {
+    opacity: 0.8;
+}
+
+
+
+/* right section */
+.video-stats-right-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+}
+
+/* contains like and dislike button */
+.video-interactions {
+    display: flex;
+    align-items: center;
+}
+
+.video-like-button, .video-dislike-button {
+    flex: 1;
+}
+
+.video-like-button:hover, .video-dislike-button:hover , .video-options-button:hover , .video-share-button:hover {
+    background-color: #d9d9d9;
+}
+
+    /* for image and text within image, thanks to iconoir for providing the svg */
+.video-share-button, .video-like-button, .video-dislike-button, .video-options-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* align-self: center; */
+    background-color: rgb(233, 231, 231);
+    height: 100%;
+    border: none;
+    font-family: Roboto, Arial;
+    cursor: pointer;
+    transition: opacity 0.2s; 
+    font-size: 14px;
+    color: rgb(15, 15, 15);
+    font-weight: 500;
+    position: relative;
+}
+
+.video-like-button, .video-dislike-button {
+    padding: 12px 20px 12px 20px; 
+}
+
+/* create a divider between buttons */
+/* add content at the end of the first element to do so */
+.video-like-button {
+    /* position: relative; */
+    /* border radius for just the left side */
+    /* border radius takes 4 values - top left, top right, bottom right, bottom left (ie clockwise) */
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.video-like-pic, .video-dislike-pic, .video-share-pic, .video-options-pic {
+    background-color: transparent;
+    height: 20px;
+    width: 20px;
+}
+
+.video-like-pic, .video-dislike-pic, .video-share-pic {
+    margin-right: 6px;
+}
+
+.video-dislike-pic, .comment-dislike-pic {
+    /* flip the picture */
+    transform: scaleX(-1);
+}
+
+.video-like-button::after {
+    content: ''; /* Required to create the pseudo-element */
+    position: absolute;
+    right: 0;
+    /* Start at the middle */
+    top: 50%; 
+    /*Center vertically*/
+    transform: translateY(-50%);
+    /* Adjust height of the divider */ 
+    height: 60%; 
+    /* Width of the divider */
+    width: 1px; 
+    /* Color of the divider */ 
+    background-color: #bebebe; 
+}
+
+.video-dislike-button {
+    /* border radius for just the left side */
+    /* border radius takes 4 values - top left, top right, bottom right, bottom left (ie clockwise) */
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.video-share-button {
+    padding: 12px 17px 12px 17px;
+    border-radius: 20px;
+}
+
+.video-options-pic {
+    /* position: absolute; */
+}
+
+.video-options-button {
+    padding: 12px 10px 12px 10px;
+    border-radius: 50%;
+}
+
+.video-description-container {
+    background-color: rgb(233, 231, 231);
+    /* align-self: flex-start; */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 50px;
+    border-radius: 10px;
+}
+
+.current-video-stats-basic {
+    padding: 10px 10px 3px 10px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.video-description-text {
+    padding: 0px 10px 10px 10px;
+}
+
+
+/* comment section parsing */
+
+.video-comments-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    row-gap: 20px;
+}
+
+/* first section */
+.video-comments-count {
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 40px;
+    margin-bottom: 5px;
+}
+
+.sortby-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+}
+
+.sortby-button .tooltip {
+    position: absolute;
+    background-color: rgb(102, 102, 102);
+    color: white; 
+    padding: 4px 8px 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    width: 60px;
+    bottom: -60px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    text-align: start;
+    font-family: Roboto, Arial;
+    line-height: 22px;
+    /* when mouse hovers over tooltip, do nothing */
+    pointer-events: none;
+    /* prevent text from wraping around */
+    /* white-space: nowrap; */
+}
+
+.sortby-button:hover .tooltip {
+    opacity: 1;
+}
+
+.sortby-button:active {
+    background-color: rgb(233, 231, 231);
+}
+
+.sort-by-pic {
+    height: 30px;
+    width: 30px;
+    margin-right: 2px;
+}
+
+/* second part of section */
+
+.video-comments-input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: start;
+    column-gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.comment-input-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    row-gap: 15px;
+}
+
+.video-comment-user-avatar {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+}
+
+.video-comment-input {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    font-family: Roboto, Arial;
+    font-size: 14px;
+    border-bottom: solid 1px rgb(199, 198, 198);
+    padding-bottom: 5px;
+}
+
+/* remove the full border when input box becomes active */
+.video-comment-input:focus {
+    outline: none;
+    border-bottom: solid 1px black;
+}
+
+/* + is the adjacent sibling combinator, it specifies that when the input is focused, the adjacent container should be displayed */
+
+/* + selects an element directly preceded by another element, useful when styling an element based on the state or properties of its IMMEDIATE PREVIOUS SIBLING */
+.video-comment-input:focus + .beneath-input-container {
+    display: flex;
+    align-items: center;
+    /* use space between to have one at beginning and other at end, it works because width is set to 100% */
+    justify-content: space-between;
+    width: 100%;
+}
+
+.beneath-input-container {
+    display: none;
+}
+
+.smiley-button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.smiley-button:hover {
+    background-color: #d9d9d9;
+    /* create button hover effect but counteract with margin so it doesn't affect the movement of the other elements within the container */
+    padding: 8px;
+    margin: -8px;
+    border-radius: 50%;
+}
+
+.cancel-button, .post-comment-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 9px 15px;
+    font-weight: 500;
+    font-size: 14px
+}
+
+.cancel-button {
+    background-color: transparent;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.cancel-button:hover {
+    background-color: #d9d9d9;    
+}
+
+.post-comment-btn {
+    background-color: rgb(233, 232, 232);
+    color: rgb(151, 151, 151);;
+}
+
+/* last section - actual comments */
+
+.video-comments-list-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    row-gap: 20px;
+}
+
+.video-comment {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: start;
+    column-gap: 15px;
+    width: 100%;
+}
+
+.commenter-avatar {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+}
+
+.comment-information {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    row-gap: 7px;
+    width: 100%;
+    font-family: Roboto, Arial;
+}
+
+.comment-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 5px;
+    width: 100%;
+}
+
+.commenter-username {
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: rgb(122, 122, 122);
+}
+
+.comment-text {
+    margin-top: 2px;
+    font-size: 13px;
+}
+
+.comment-interactions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    column-gap: 4px;
+}
+
+.comment-like-button, .comment-dislike-button {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    
+}
+
+.comment-like-count {
+    font-size: 12px;
+    margin-right: 1px;
+}
+
+.comment-reply-button {
+    padding: 7px 12px 7px 12px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.comment-like-button:hover, .comment-dislike-button:hover, .comment-reply-button:hover {
+    background-color: rgb(225, 224, 224);
+}
+
+.comment-like-button img {
+    transition: filter 0.5s ease;
+}
+
+.comment-like-button:active img {
+    filter: brightness(0) invert(1);
+}
+
+.reply-interaction-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    /* padding: 7px 25px 7px 25px; */
+    color: rgb(7, 28, 249);
+    border-radius: 20px;
+    column-gap: 5px;
+    padding: 5px 12px 5px 12px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.reply-interaction-button:hover {
+    background-color: rgb(222, 239, 244);
+}
+
+.reply-interaction-button:active {
+    background-color: rgb(203, 207, 209);
+}
+
+.reply-pic {
+    /* convert the image outline */
+    filter: invert(9%) sepia(100%) saturate(6195%) hue-rotate(243deg) brightness(103%) contrast(120%);
+    transform: rotate(0deg);
+}
+
+.reply-interaction-button:focus .reply-pic {
+    transform: rotate(180deg);
+}
