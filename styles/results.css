@@ -31,6 +31,7 @@ p {
     align-items: flex-start;
     cursor: pointer;
     margin-bottom: 20px;
+    column-gap: 16px;
 
     /* transition takes two values - what we want to transition and how long to take */
     transition: opacity 0.15s;
@@ -44,11 +45,28 @@ p {
 .result-thumbnail {
     background-color: transparent;
     height: 200px;
-    width: 360px;
+    width: 100%;
     object-fit: cover;
     border-radius: 12px;
-    margin-right: 16px;
 }
+
+.result-video-thumbnail {
+    position: relative;
+}
+
+/* recall you have to wrap overlay in a container for its own settings to take effect */
+.result-video-thumbnail .video-overlay-container {
+    display: none;
+}
+
+.result-video-thumbnail:hover .video-overlay-container {
+    display: block;
+}
+
+.video-overlay {
+    border-radius: 12px;
+}
+
 
 .search-video-channel-name, .search-video-description {
     font-size: 13px;
@@ -59,7 +77,7 @@ p {
     justify-content: center;
 }
 
-.search-video-channel-name .tooltip, 
+.search-video-channel-name .tooltip,
 .search-video-description .tooltip {
     position: absolute;
     background-color: gray;
@@ -83,7 +101,7 @@ p {
     bottom: -50px;
 }
 
-.search-video-channel-name:hover .tooltip, 
+.search-video-channel-name:hover .tooltip,
 .search-video-description:hover .tooltip {
     opacity: 1;
 }
@@ -124,10 +142,9 @@ p {
 @media (min-width: 1000px) {
     .result-thumbnail {
         height: 300px;
-        width: 500px;
+        width: 100%;
         object-fit: cover;
         border-radius: 12px;
-        margin-right: 16px;
     }
 
     .result-video-container {

@@ -213,7 +213,7 @@ we use media queries for that */
 }
 
 .thumbnail-row:hover .video-overlay-container {
-    display: block;
+    display: inline-block;
 }
 
 .video-overlay {
