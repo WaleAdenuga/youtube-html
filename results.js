@@ -36,7 +36,7 @@ function renderResultsPage() {
     searchVideos.forEach(async (video) => {
 
         const channelInfo = await loadChannelInfo(video.loadChannelId());
-        
+
         let resultVideo = document.createElement('div');
         resultVideo.classList.add('result-video-preview');
         resultVideo.innerHTML = `
@@ -48,7 +48,7 @@ function renderResultsPage() {
                     <a href="https://www.youtube.com/watch?v=${video.getId()}">
                         <button class="redirect js-redirect-youtube">GO TO YOUTUBE</button>
                     </a>
-                    <a href="display.html">
+                    <a href="display.html?id=${video.getId()}">
                         <button class="redirect js-redirect-display">WATCH HERE</button>
                     </a>
                 </div>

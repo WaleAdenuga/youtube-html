@@ -10,7 +10,7 @@ try {
     renderHeaderCases();
     renderSidebar();
     renderHomePage();
-    
+
 } catch (error) {
     console.log(error);
 }
@@ -26,26 +26,26 @@ function renderHomePage() {
         // videoInGrid.classList.add('video-preview');
         // videoInGrid.classList.add('js-video-preview');
 
-        videoInGrid.innerHTML = 
+        videoInGrid.innerHTML =
         `
             <div class="thumbnail-row">
                 <img class="thumbnail" src=${video.loadThumbnailUrl()}>
                 <div class="video-overlay-container">
                     <div class="video-overlay">
                         <a href="https://www.youtube.com/watch?v=${video.getId()}">
-                            <button class="redirect js-redirect-youtube">GO TO YOUTUBE</button> 
+                            <button class="redirect js-redirect-youtube">GO TO YOUTUBE</button>
                         </a>
-                        <a href="display.html">
+                        <a href="display.html?id=${video.getId()}">
                             <button class="redirect js-redirect-display">WATCH HERE</button>
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="video-time">
                     ${video.formatDuration()}
                 </div>
             </div>
-    
+
             <div class="video-info-grid">
                 <div class="channel-picture">
                     <div class="profile-pic-container">
@@ -61,7 +61,7 @@ function renderHomePage() {
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="video-info">
                     <a href="https://www.youtube.com/watch?v=${video.getId()}" class="video-title-link">
                         <p class="video-title">

@@ -33,12 +33,12 @@ button {
     height: 450px;
 }
 
-.related-video-container {
+.secondary-display {
     flex: 1;
     display: flex;
     flex-direction: column;
     height: 100%;
-    
+
 }
 
 .video-iframe-container {
@@ -192,7 +192,7 @@ button {
     border: none;
     font-family: Roboto, Arial;
     cursor: pointer;
-    transition: opacity 0.2s; 
+    transition: opacity 0.2s;
     font-size: 14px;
     color: rgb(15, 15, 15);
     font-weight: 500;
@@ -200,7 +200,7 @@ button {
 }
 
 .video-like-button, .video-dislike-button {
-    padding: 12px 20px 12px 20px; 
+    padding: 12px 20px 12px 20px;
 }
 
 /* create a divider between buttons */
@@ -233,15 +233,15 @@ button {
     position: absolute;
     right: 0;
     /* Start at the middle */
-    top: 50%; 
+    top: 50%;
     /*Center vertically*/
     transform: translateY(-50%);
-    /* Adjust height of the divider */ 
-    height: 60%; 
+    /* Adjust height of the divider */
+    height: 60%;
     /* Width of the divider */
-    width: 1px; 
-    /* Color of the divider */ 
-    background-color: #bebebe; 
+    width: 1px;
+    /* Color of the divider */
+    background-color: #bebebe;
 }
 
 .video-dislike-button {
@@ -322,7 +322,7 @@ button {
 .sortby-button .tooltip {
     position: absolute;
     background-color: rgb(102, 102, 102);
-    color: white; 
+    color: white;
     padding: 4px 8px 4px 8px;
     border-radius: 5px;
     font-size: 12px;
@@ -439,7 +439,7 @@ button {
 }
 
 .cancel-button:hover {
-    background-color: #d9d9d9;    
+    background-color: #d9d9d9;
 }
 
 .post-comment-btn {
@@ -523,7 +523,7 @@ button {
     border: none;
     cursor: pointer;
     border-radius: 50%;
-    
+
 }
 
 .comment-like-count {
