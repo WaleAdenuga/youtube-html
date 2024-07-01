@@ -13,11 +13,11 @@ try {
     }
 
     renderHeaderCases(searchValue);
-    
-    renderSidebar();    
+
+    renderSidebar();
     await loadSearchedVideos(checkAndReplace(searchValue));
     renderResultsPage();
-    
+
 } catch (error) {
     console.log(error);
 }
@@ -41,9 +41,18 @@ function renderResultsPage() {
         resultVideo.classList.add('result-video-preview');
         resultVideo.innerHTML = `
         <div class="result-video-thumbnail">
-            <a href="https://www.youtube.com/watch?v=${video.getId()}">
-                <img class="result-thumbnail" src=${video.loadThumbnailUrl()}>
-            </a>
+            <img class="result-thumbnail" src=${video.loadThumbnailUrl()}>
+
+            <div class="video-overlay-container">
+                <div class="video-overlay">
+                    <a href="https://www.youtube.com/watch?v=${video.getId()}">
+                        <button class="redirect js-redirect-youtube">GO TO YOUTUBE</button>
+                    </a>
+                    <a href="display.html">
+                        <button class="redirect js-redirect-display">WATCH HERE</button>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div class="search-video-info">
@@ -59,7 +68,7 @@ function renderResultsPage() {
                 <a href="https://www.youtube.com/watch?v=${video.getId()}">
                     <p>${video.formatViewCounts()} views &#183; ${video.formatDatePosted()}</p>
                 </a>
-                
+
             </div>
             <div>
                 <a href="https://www.youtube.com/${channelInfo.loadChannelCustomUrl()}" class="search-video-channel-info">
@@ -70,7 +79,7 @@ function renderResultsPage() {
                         <div class="tooltip">${video.loadChannelTitle()}</div>
                     </div>
                 </a>
-                
+
             </div>
             <div>
 
