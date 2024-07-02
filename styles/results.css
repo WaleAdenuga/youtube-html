@@ -20,7 +20,16 @@ p {
     /* space between means item will have space between them */
     /* justify-content: space-between; */
     align-items: flex-start;
-    cursor: pointer;
+}
+
+select {
+    padding: 5px;
+    font-size: 16px;
+}
+
+#selectedOption {
+    margin-top: 10px;
+    font-weight: bold;
 }
 
 .result-video-preview {
@@ -45,7 +54,7 @@ p {
 .result-thumbnail {
     background-color: transparent;
     height: 200px;
-    width: 100%;
+    width: 360px;
     object-fit: cover;
     border-radius: 12px;
 }
@@ -142,7 +151,7 @@ p {
 @media (min-width: 1000px) {
     .result-thumbnail {
         height: 300px;
-        width: 100%;
+        width: 500px;
         object-fit: cover;
         border-radius: 12px;
     }

@@ -29,7 +29,7 @@ function renderDisplayPage(displayValue) {
 
     primaryDisplay.innerHTML = `
     <div class="video-display-container">
-        <iframe class="video-iframe-container" src="https://www.youtube.com/embed/${displayValue}?mute=1">
+        <iframe class="video-iframe-container" src="https://www.youtube.com/embed/UgTXAT6P0?mute=1">
         </iframe>
 
         <!-- youtube data api doesn't allow you embed like this, they want control -->

@@ -10,6 +10,8 @@ class Video {
     contentDetails;
     statistics; // contains viewCount, likeCount, dislikeCount, favoriteCount, commentCount
 
+    // constructor for only id provided
+
     constructor(videoDetails) {
         this.kind = videoDetails.kind;
         this.etag = videoDetails.etag;

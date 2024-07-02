@@ -15,7 +15,7 @@ try {
     renderHeaderCases(searchValue);
 
     renderSidebar();
-    await loadSearchedVideos(checkAndReplace(searchValue));
+    // await loadSearchedVideos(checkAndReplace(searchValue));
     renderResultsPage();
 
 } catch (error) {
