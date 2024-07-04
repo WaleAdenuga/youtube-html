@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Clone</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+
+  <link href="../styles/general.css" rel="stylesheet">
+  <link href="../styles/header.css" rel="stylesheet">
+  <link href="../styles/video.css" rel="stylesheet">
+  <link href="../styles/sidebar.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- semantic elements eg header, nav so that browsewr or robots can better recognise some elements 
+  -->
+  <!-- semantic elements are the same as div, they just give new meaning and help out screen readers -->
+
+  <header class="header js-header">
+  </header>
+
+  <!-- replace div with nav -->
+  <nav class="sidebar js-sidebar">
+    
+  </nav>
+
+  <!-- in html, there are 3 elements
+  a block element - takes up the entire line in their container (in divs)
+  an inline block element - takes up the space it needs eg img and input
+  an inline element - appears within a line of text
+ -->
+
+  <!-- div is a block element, div creates a box around content (it's a container)
+div can contain any other element inside-->
+
+<!-- main is semantic, should contain main part of the webpage-->
+<!-- video grid is a section of main -->
+  <main>
+    <section class="video-grid js-video-grid">
+
+    </section>
+  </main>
+  
+  <script src="../js/general-layout/header.js" type="module"></script>
+  <script src="../js/youtube.js" type="module"></script>
+  <script src="../js/channel.js" type="module"></script>
+  <script src="https://unpkg.com/moment"></script>
+</body>
+
+</html>

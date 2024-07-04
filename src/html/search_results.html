@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link href="../styles/general.css" rel="stylesheet">
+    <link href="../styles/header.css" rel="stylesheet">
+    <link href="../styles/video.css" rel="stylesheet">
+    <link href="../styles/sidebar.css" rel="stylesheet">
+    <link href="../styles/results.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+
+</head>
+
+<body>
+    <header class="header js-header">
+    </header>
+
+    <!-- replace div with nav -->
+    <nav class="sidebar js-sidebar">
+    </nav>
+
+    <!-- main styled as a row, videos appended to section -->
+    <main class="result-video-container ">
+
+        <label for="myDropdown">Choose an option:</label>
+        <select id="myDropdown">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+        </select>
+
+        <section class="js-result-video-container">
+
+
+        </section>
+    </main>
+
+    <script src="../js/results.js" type="module"></script>
+    <script src="../js/general-layout/header.js" type="module"></script>
+    <script src="https://unpkg.com/moment"></script>
+</body>
+
+</html>
