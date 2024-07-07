@@ -1,3 +1,8 @@
+import "../styles/general.css";
+import "../styles/header.css";
+import "../styles/video.css";
+import "../styles/sidebar.css";
+
 import { loadPopularVideos, homeVideos } from "./videos.js";
 import { loadChannelInfo } from "./channel.js";
 import { renderHeaderCases } from "./general-layout/header.js"

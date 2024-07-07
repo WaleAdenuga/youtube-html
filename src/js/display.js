@@ -1,3 +1,7 @@
+import "../styles/header.css";
+import "../styles/video.css";
+import "../styles/display.css";
+
 import { renderHeaderCases } from "./general-layout/header.js";
 
 

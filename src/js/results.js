@@ -1,3 +1,9 @@
+import "../styles/general.css";
+import "../styles/header.css";
+import "../styles/video.css";
+import "../styles/sidebar.css";
+import "../styles/results.css";
+
 import { renderHeaderCases } from "./general-layout/header.js";
 import { renderSidebar } from "./general-layout/sidebar.js";
 import { loadChannelInfo } from "./channel.js";
