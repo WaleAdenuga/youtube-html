@@ -9,7 +9,9 @@ module.exports = {
     },
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        clean: true,
+        publicPath: '/'
     },
     module: {
         rules: [
@@ -26,7 +28,20 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
-            }
+            },
+            {
+                test: /\.(svg)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[hash].[ext]',
+                            outputPath: 'images'
+                        }
+                    }
+                ]
+                /* type: 'asset/resource', // use asset module to handle SVG */
+            },
         ]
     },
     plugins: [
@@ -46,5 +61,17 @@ module.exports = {
             chunks: ['display']
         })
     ],
+
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'dist'),
+            watch: true,
+        },
+        compress: true,
+        port: 9000,
+        open: ['http://localhost:9000/youtube.html'], // Open the browser after the server starts to the default file
+        hot: true, // Enable hot module replacement
+        
+    }, 
     mode: 'development'
 };

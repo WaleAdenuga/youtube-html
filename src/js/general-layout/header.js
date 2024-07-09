@@ -1,5 +1,5 @@
 import { makeAuthenticationRequest, accessParameters, handleAuthResponse, loadOwnChannelInfo } from "../channel.js";
-
+import { returnSVGS } from "./imports.js";
 
 export function renderHeaderCases(searchValue) {
     if (window.location.hash) {
@@ -12,10 +12,11 @@ export function renderHeaderCases(searchValue) {
 }
 
 function renderHeader(searchValue) {
+    const svgs = returnSVGS();
     let headerHTML = `
     <div class="left-section">
-        <img class="hamburger-menu" src="../../../downloaded_images/icons/hamburger-menu.svg">
-        <img src="../../../downloaded_images/icons/youtube-logo.svg" class="youtube-logo js-youtube-logo">
+        <img class="hamburger-menu" src="${svgs['hamburger-menu.svg']}">
+        <img src="${svgs['youtube-logo.svg']}" class="youtube-logo js-youtube-logo">
     </div>
 
     <div class="middle-section">
@@ -24,12 +25,12 @@ function renderHeader(searchValue) {
 
         <!-- put position absolute inside position tooltip to create tooltip -->
         <button class="search-button js-search-button">
-            <img class="search-icon" src="../../../downloaded_images/icons/search.svg">
+            <img class="search-icon" src="${svgs['search.svg']}">
             <div class="tooltip">Search</div>
         </button>
 
         <button class="voice-search-button">
-            <img class="voice-search-icon" src="../../../downloaded_images/icons/voice-search-icon.svg">
+            <img class="voice-search-icon" src="${svgs['voice-search-icon.svg']}">
             <div class="tooltip">Search with your voice</div>
         </button>
 
@@ -84,7 +85,7 @@ function renderHeader(searchValue) {
 }
 
 async function renderSignedIn(accessToken) {
-
+    const svgs = returnSVGS();
     const myChannel = await loadOwnChannelInfo(accessToken);
     console.log(myChannel);
 
@@ -95,12 +96,12 @@ async function renderSignedIn(accessToken) {
 
     content.innerHTML = `
     <div class="upload-icon-container">
-        <img class="upload-icon" src="../../../downloaded_images/icons/upload.svg">
+        <img class="upload-icon" src="${svgs['upload.svg']}">
         <div class="tooltip">Create</div>
     </div>
 
     <div class="notifications-icon-container">
-        <img class="notifications-icon" src="../../../downloaded_images/icons/notifications.svg">
+        <img class="notifications-icon" src="${svgs['notifications.svg']}">
         <div class="notification-count">
             3
         </div>
@@ -114,7 +115,7 @@ async function renderSignedIn(accessToken) {
 }
 
 function renderSignedOut() {
-
+    const svgs = returnSVGS();
     const rightSection = document.querySelector('.js-right-section');
 
     let content = document.createElement('div');
@@ -122,12 +123,12 @@ function renderSignedOut() {
 
     content.innerHTML = `
         <div class="settings-icon-container">
-            <img class="settings-icon" src="../../../downloaded_images/icons/three-dots-vertical.svg">
+            <img class="settings-icon" src="${svgs['three-dots-vertical.svg']}">
             <div class="tooltip">Settings</div>
         </div>
 
         <button class="sign-in-btn js-sign-button">
-            <img class="sign-in-icon" src="../../../downloaded_images/icons/person-circle.svg">
+            <img class="sign-in-icon" src="${svgs['person-circle.svg']}">
            <div class="sign-in-text">Sign in</div>
         </button>
     `;

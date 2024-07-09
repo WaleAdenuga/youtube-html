@@ -19,12 +19,17 @@ class Video {
         this.contentDetails = videoDetails.contentDetails;
         if (videoDetails.statistics) {
             this.statistics = videoDetails.statistics;
-        } else { 
+        } else {
             this.loadStatistics().then((response) => {
                 this.statistics = response;
             })    
         }
     }
+
+    // load video details from id alone
+    // constructor(videoId) {
+
+    // }
 
     getId() {
         if (this.kind === 'youtube#searchResult') return this.id.videoId;
@@ -73,16 +78,23 @@ class Video {
     }
 
     formatViewCounts() {
-        let viewCounts = parseInt(this.statistics.viewCount, 10) || 0;
-        if (viewCounts < 1000) {
-            return viewCounts;
-        } else if (viewCounts < 1000000) {
-            return (viewCounts / 1000).toFixed(1) + "K";
-        } else if (viewCounts < 1000000000) {
-            return (viewCounts / 1000000).toFixed(1) + "M";
-        } else if (viewCounts < 1000000000000) {
-            return (viewCounts / 1000000000).toFixed(1) + "B";
+        try {
+            let viewCounts = parseInt(this.statistics.viewCount, 10) || 0;
+            console.log(viewCounts);
+            if (viewCounts < 1000) {
+                return viewCounts;
+            } else if (viewCounts < 1000000) {
+                return (viewCounts / 1000).toFixed(1) + "K";
+            } else if (viewCounts < 1000000000) {
+                return (viewCounts / 1000000).toFixed(1) + "M";
+            } else if (viewCounts < 1000000000000) {
+                return (viewCounts / 1000000000).toFixed(1) + "B";
+            }
+
+        } catch (error) {
+            console.log(error);
         }
+
     }
 
     loadThumbnailUrl() {
@@ -101,7 +113,7 @@ class Video {
 
     async loadStatistics() {
         try {
-            const response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${this.getId()}&maxResults=5&regionCode=BE&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`);
+            const response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${this.getId()}&maxResults=5&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`);
             const data = await response.json();
             return data.items[0].statistics;
         } catch (error) {
@@ -125,20 +137,29 @@ class Video {
     loadVideoDescription() {
         return this.snippet.description;
     }
+
+    loadFromVideoId(videoId) {
+
+    }
 }
 
-export async function loadSearchedVideos(queryString) {
-    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=49&order=relevance&q=${queryString}&type=video&videoCaption=any&videoDefinition=any&videoEmbeddable=any&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`).then((response) => {
+export async function loadSearchedVideos(queryString, regionCode) {
+    if (!regionCode) {
+        console.log('no default region code');
+        regionCode = 'BE'; // default to Belgium if no regionCode is provided
+    }
+    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=49&order=relevance&q=${queryString}&type=video&regionCode=${regionCode}&videoCaption=any&videoDefinition=any&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`).then((response) => {
         // response is a json object
         return response.json();
     }).then((data) => {
         searchVideos = data.items.map((details) => {
             return new Video(details);
         });
+        console.log(searchVideos);
     }).catch((error) => {
         console.log(error);
     });
-    return promise;
+    return promise;    
 }
 
 export async function loadPopularVideos() {

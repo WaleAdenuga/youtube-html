@@ -1,30 +1,33 @@
-export function renderSidebar() {
+import { returnSVGS } from "./imports.js";
 
+export function renderSidebar() {
+  const svgs = returnSVGS();
+  
   let sidebarHTML = 
    `
     
     <div class="sidebar-link js-sidebar-home">
-      <img src="../../downloaded_images/icons/home.svg">
+      <img src="${svgs['home.svg']}">
       <div>Home</div>
     </div>
     <div class="sidebar-link">
-      <img src="../../downloaded_images/icons/explore.svg">
+      <img src="${svgs['explore.svg']}">
       <div>Explore</div>
     </div>
     <div class="sidebar-link">
-      <img src="../../downloaded_images/icons/subscriptions.svg">
+      <img src="${svgs['subscriptions.svg']}">
       <div>Subscriptions</div>
     </div>
     <div class="sidebar-link">
-      <img src="../../downloaded_images/icons/originals.svg">
+      <img src="${svgs['originals.svg']}">
       <div>Originals</div>
     </div>
     <div class="sidebar-link">
-      <img src="../../downloaded_images/icons/youtube-music.svg">
+      <img src="${svgs['youtube-music.svg']}">
       <div>Youtube Music</div>
     </div>
     <div class="sidebar-link">
-      <img src="../../downloaded_images/icons/library.svg">
+      <img src="${svgs['library.svg']}">
       <div>Library</div>
     </div>
     

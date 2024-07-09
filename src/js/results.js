@@ -7,6 +7,8 @@ import "../styles/results.css";
 import { renderHeaderCases } from "./general-layout/header.js";
 import { renderSidebar } from "./general-layout/sidebar.js";
 import { loadChannelInfo } from "./channel.js";
+import { getNames, getCode } from 'country-list';
+import { loadSearchedVideos, searchVideos } from "./videos.js";
 
 try {
     const url = new URL(window.location.href);
@@ -20,8 +22,26 @@ try {
     renderHeaderCases(searchValue);
 
     renderSidebar();
-    // await loadSearchedVideos(checkAndReplace(searchValue));
+    await loadSearchedVideos(checkAndReplace(searchValue));
     renderResultsPage();
+
+    const dropDown = document.querySelector('.country-dropdown');
+
+    const countries = getNames();
+    countries.sort();
+    countries.forEach((country) => {
+        const option = document.createElement('option');
+        option.text = country;
+        option.value = getCode(country);
+        dropDown.appendChild(option);
+    });
+
+    let regionCode = '';
+    dropDown.addEventListener('change', async () => {
+        regionCode = dropDown.options[dropDown.selectedIndex].value;
+        await loadSearchedVideos(checkAndReplace(searchValue), regionCode);
+        renderResultsPage();
+    });
 
 } catch (error) {
     console.log(error);
@@ -37,6 +57,7 @@ function checkAndReplace(searchString) {
 
 function renderResultsPage() {
     const container = document.querySelector('.js-result-video-container');
+    container.innerHTML = '';
 
     searchVideos.forEach(async (video) => {
 
