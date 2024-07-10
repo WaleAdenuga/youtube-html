@@ -1,13 +1,15 @@
 export let searchVideos = [];
 export let homeVideos = [];
 
-class Video {
+export class Video {
     kind; // kind can be search result or possibly trending, we'll figure that out later
     etag;
     id; // contains kind and videoId
     snippet; // contains info on the video
     contentDetails;
     statistics; // contains viewCount, likeCount, dislikeCount, favoriteCount, commentCount
+    status;
+    player;
 
     // constructor for only id provided
 
@@ -22,14 +24,11 @@ class Video {
         } else {
             this.loadStatistics().then((response) => {
                 this.statistics = response;
-            })    
+            });    
         }
+        this.status = videoDetails.status;
+        this.player = videoDetails.player;
     }
-
-    // load video details from id alone
-    // constructor(videoId) {
-
-    // }
 
     getId() {
         if (this.kind === 'youtube#searchResult') return this.id.videoId;
@@ -79,7 +78,27 @@ class Video {
 
     formatViewCounts() {
         try {
-            let viewCounts = parseInt(this.statistics.viewCount, 10) || 0;
+            return this.#formatCount(this.statistics.viewCount);
+        } catch (error) {
+            console.error('No view count from data api' + error);
+        }
+    }
+
+    formatLikeCount() {
+        return this.#formatCount(this.statistics.likeCount);
+    }
+
+    formatCommentCount() {
+        return parseInt(this.statistics.commentCount).toLocaleString();
+    }
+
+    formatDisplayViewCount() {
+        return parseInt(this.statistics.viewCount).toLocaleString();
+    }
+
+    #formatCount(count) {
+        let viewCounts = parseInt(count, 10) || 0;
+        if (viewCounts) {
             console.log(viewCounts);
             if (viewCounts < 1000) {
                 return viewCounts;
@@ -90,11 +109,40 @@ class Video {
             } else if (viewCounts < 1000000000000) {
                 return (viewCounts / 1000000000).toFixed(1) + "B";
             }
+        } else console.error("Invalid view count");
 
-        } catch (error) {
-            console.log(error);
+
+    }
+
+    formatDescription(displayFull) {
+        console.log(this.snippet.description);
+        const paragraphs = this.snippet.description.split(/\n\n+/);
+
+        const sentences = [];
+        paragraphs.forEach((paragraph) => {
+            paragraph.split(/\n+/).map((line) => {
+                sentences.push(line);
+            })
+        });
+
+        let description = '';
+        console.log(paragraphs);
+        console.log(sentences);
+        if (this.snippet.description.length > 180) {
+            if (displayFull) {
+                description = this.snippet.description;
+            } else {
+                if(sentences.length > 2) {
+                    description = sentences.slice(0, 2).join('\n');
+                } else {
+                    description = this.snippet.description.substring(0, 180);
+                }
+                
+            }
+        } else {
+            description = this.snippet.description;
         }
-
+        return description.replace(/\n/g, '<br>');
     }
 
     loadThumbnailUrl() {
@@ -138,9 +186,6 @@ class Video {
         return this.snippet.description;
     }
 
-    loadFromVideoId(videoId) {
-
-    }
 }
 
 export async function loadSearchedVideos(queryString, regionCode) {
@@ -174,6 +219,19 @@ export async function loadPopularVideos() {
     }).catch((error) => {
         console.log(error);
     });
+    return promise;
+}
+
+export async function loadFromVideoId(videoId) {
+    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails%2C%20snippet%2C%20statistics%2C%20player%2C%20status&id=${videoId}&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`)
+        .then((response) => {
+            return response.json();
+        }).then((data) => {
+            return new Video(data.items[0]);
+        }).catch((error) => {
+            console.log(error);
+        });
+
     return promise;
 }
 

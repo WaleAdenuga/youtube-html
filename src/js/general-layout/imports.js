@@ -1,5 +1,5 @@
 export function returnSVGS() {
-    const svgs = importAll(require.context('../../../downloaded_images/icons', true, /\.svg$/));
+    const svgs = importAll(require.context('../../../downloaded_images/icons', true, /\.(svg|jpe?g)$/));
     return svgs;
 }
 

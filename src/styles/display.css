@@ -19,7 +19,7 @@ button {
 }
 
 .primary-display {
-    width: 70%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     /* space between means item will have space between them */
@@ -122,6 +122,11 @@ button {
     width: 50px;
     height: 50px;
     border-radius: 25px;
+    cursor: pointer;
+}
+
+.author-youtube-info {
+    cursor: pointer;
 }
 
 .author-name {
@@ -199,8 +204,12 @@ button {
     position: relative;
 }
 
-.video-like-button, .video-dislike-button {
+.video-like-button {
     padding: 12px 20px 12px 20px;
+}
+
+.video-dislike-button {
+    padding: 12px 10px 12px 10px;
 }
 
 /* create a divider between buttons */
@@ -273,16 +282,38 @@ button {
     width: 100%;
     margin-bottom: 50px;
     border-radius: 10px;
+    cursor: pointer;
+}
+
+.video-description-container:active, .video-like-button:active, .video-dislike-button:active, .video-share-button:active, .video-options-button:active {
+    background-color: rgb(197, 197, 197);
+}
+
+.show-more-button {
+    background-color: transparent;
+    font-weight: 500;
+    font-family: Roboto, Arial;
+    border: none;
+    padding: 3px 0px 3px 0px;
+    margin: 0;
+    margin-left: 13px;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+.show-more-button:active {
+    background-color: rgb(138, 138, 138);
 }
 
 .current-video-stats-basic {
-    padding: 10px 10px 3px 10px;
+    padding: 14px 10px 3px 13px;
     font-weight: 500;
     margin-bottom: 0;
 }
 
 .video-description-text {
-    padding: 0px 10px 10px 10px;
+    padding: 1px 10px 0px 13px;
+    line-height: 20px;
 }
 
 

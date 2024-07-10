@@ -33,17 +33,7 @@ class Channel {
     }
 
     loadChannelProfilePicCustomUrl() {
-        if (this.snippet.thumbnails.high) {
-            return this.snippet.thumbnails.high.url;
-        } else if (this.snippet.thumbnails.medium) {
-            return this.snippet.thumbnails.medium.url;
-        } else if (this.snippet.thumbnails.standard) {
-            return this.snippet.thumbnails.standard.url;
-        } else if (this.snippet.thumbnails.maxres) {
-            return this.snippet.thumbnails.maxres.url;
-        } else {
-            return this.snippet.thumbnails.default.url;
-        }
+        return this.snippet.thumbnails.default.url;
     }
 
     loadChannelCustomUrl() {

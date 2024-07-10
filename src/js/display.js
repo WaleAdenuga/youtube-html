@@ -3,6 +3,9 @@ import "../styles/video.css";
 import "../styles/display.css";
 
 import { renderHeaderCases } from "./general-layout/header.js";
+import { returnSVGS } from "./general-layout/imports.js";
+import { loadFromVideoId } from "./videos.js";
+import { loadChannelInfo } from "./channel.js";
 
 
 try {
@@ -20,11 +23,24 @@ try {
 } catch (error) {
     console.log(error);
 }
+let fullDescription = '';
+function formatTextDescription(video, displayValue) {
+    console.log(video);
+    return video.formatDescription(displayValue);
+}
 
-
-function renderDisplayPage(displayValue) {
+async function renderDisplayPage(displayValue) {
 
     const displayContainer = document.querySelector('.js-display-container');
+
+    const svgs = returnSVGS();
+    console.log(svgs);
+    const video = await loadFromVideoId(displayValue);
+    console.log(video);
+    console.log(video.player.embedHtml);
+
+    const channelInfo = await loadChannelInfo(video.loadChannelId());
+    console.log(channelInfo);
 
     // Primary display - video, video statistics and comments
     let primaryDisplay = document.createElement('div');
@@ -33,35 +49,32 @@ function renderDisplayPage(displayValue) {
 
     primaryDisplay.innerHTML = `
     <div class="video-display-container">
-        <iframe class="video-iframe-container" src="https://www.youtube.com/embed/UgTXAT6P0?mute=1">
+        <iframe class="video-iframe-container" src="https://www.youtube.com/embed/${video.getId()}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
         </iframe>
-
-        <!-- youtube data api doesn't allow you embed like this, they want control -->
-        <!-- <video width="320" height="240" controls>
-        <source src="480.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-        </source>
-        </video> -->
     </div>
 
     <div class="below-video-container">
         <div class="video-information-container">
             <h3 class="display-title-container">
-                Talking Tech and AI with Google CEO Sundar Pichai!
+                ${video.loadTitle()}
             </h3>
 
             <div class="video-stats-container">
                 <div class="video-stats-left-section">
                     <div>
-                        <img class="author-pic" src="../../downloaded_images/channel-pictures/channel-1.jpeg">
+                        <a href="https://www.youtube.com/${channelInfo.loadChannelCustomUrl()}" target="_blank">
+                            <img class="author-pic" src="${channelInfo.loadChannelProfilePicCustomUrl()}">
+                        </a>
                     </div>
                     <div class="author-youtube-info">
-                        <div class="author-name">
-                            Marques Brownlee
-                        </div>
-                        <div class="author-sub-count">
-                            19M subscribers
-                        </div>
+                        <a href="https://www.youtube.com/${channelInfo.loadChannelCustomUrl()}" target="_blank">
+                            <div class="author-name">
+                                ${video.loadChannelTitle()}
+                            </div>
+                            <div class="author-sub-count">
+                                ${channelInfo.formatTooltipSubscriberCount()} subscribers
+                            </div>
+                        </a>
                     </div>
                     <button class="author-subscribe-button">
                         Subscribe
@@ -72,13 +85,12 @@ function renderDisplayPage(displayValue) {
                     <div class="video-interactions-container">
                         <div class="video-interactions">
                             <button class="video-like-button" >
-                                <img class="video-like-pic" src="../../downloaded_images/icons/like-icon.svg">
+                                <img class="video-like-pic" src="${svgs['like-icon.svg']}">
 
-                                202K
+                                ${video.formatLikeCount()}
                             </button>
                             <button class="video-dislike-button">
-                                <img class="video-dislike-pic" src="../../downloaded_images/icons/dislike-icon.svg">
-                                2.8K
+                                <img class="video-dislike-pic" src="${svgs['dislike-icon.svg']}">
                             </button>
                         </div>
                         <div class="like-dislike-ratio">
@@ -87,23 +99,28 @@ function renderDisplayPage(displayValue) {
 
                     </div>
                     <button class="video-share-button">
-                        <img class="video-share-pic" src="../../downloaded_images/icons/share-arrows.svg">
+                        <img class="video-share-pic" src="${svgs['share-arrows.svg']}">
                         Share
                     </button>
                     <button class="video-options-button">
-                        <img class="video-options-pic" src="../../downloaded_images/icons/dots-horizontal.svg">
+                        <img class="video-options-pic" src="${svgs['dots-horizontal.svg']}">
                     </button>
                 </div>
             </div>
 
             <div class="video-description-container">
                 <div class="current-video-stats-basic">
-                    4.2M views 3 years ago
+                    ${video.formatDisplayViewCount()} views &nbsp; ${video.formatDatePosted()}
                 </div>
                 <div class="video-description text">
-                    <p class="video-description-text">
-                        Talking tech and AI on the heels of Google I/O. Also a daily driver phone reveal from Google's CEO. Shoutout to Sundar!
+                    <p class="video-description-text js-video-description-text">
+                        ${formatTextDescription(video, false)}                  
                     </p>
+                    <button class="show-more-button js-show-more-button">
+                        ...more
+                    </button>
+                    
+                    
                 </div>
             </div>
 
@@ -111,22 +128,22 @@ function renderDisplayPage(displayValue) {
 
         <div class="video-comments-container">
             <div class="video-comments-count">
-                9,783 Comments
+                ${video.formatCommentCount()} Comments
 
                 <button class="sortby-button">
-                    <img class="sort-by-pic" src="../../downloaded_images/icons/sort-by.svg">
+                    <img class="sort-by-pic" src="${svgs['sort-by.svg']}">
                     Sort by
                     <div class="tooltip">Sort Comments</div>
                 </button>
             </div>
             <div class="video-comments-input-container">
-                <img class="video-comment-user-avatar" src="../../downloaded_images/channel-pictures/channel-1.jpeg">
+                <img class="video-comment-user-avatar" src="${svgs['unnamed.jpg']}">
                 <div class="comment-input-container">
                     <input class="video-comment-input" type="text" placeholder="Add a comment...">
 
                     <div class="beneath-input-container">
                         <button class="smiley-button">
-                            <img class="smiley-input" src="../../downloaded_images/icons/smiley.svg">
+                            <img class="smiley-input" src="${svgs['smiley.svg']}">
                         </button>
                         <div class="input-interaction-btns">
                             <button class="cancel-button">Cancel</button>
@@ -159,11 +176,11 @@ function renderDisplayPage(displayValue) {
 
                         <div class="comment-interactions">
                             <button class="comment-like-button" >
-                                <img class="comment-like-pic" src="../../downloaded_images/icons/like-icon.svg">
+                                <img class="comment-like-pic" src="${svgs['like-icon.svg']}">
                             </button>
                             <div class="comment-like-count">5.9K</div>
                             <button class="comment-dislike-button">
-                                <img class="comment-dislike-pic" src="../../downloaded_images/icons/dislike-icon.svg">
+                                <img class="comment-dislike-pic" src="${svgs['dislike-icon.svg']}">
                             </button>
                             <button class="comment-reply-button">
                                 Reply
@@ -171,7 +188,7 @@ function renderDisplayPage(displayValue) {
                         </div>
 
                         <button class="reply-interaction-button">
-                            <img class="reply-pic" src="../../downloaded_images/icons/nav-arrow-down.svg">
+                            <img class="reply-pic" src="${svgs['nav-arrow-down.svg']}">
                             34 replies
                         </button>
                     </div>
@@ -405,4 +422,23 @@ function renderDisplayPage(displayValue) {
     `;
 
     displayContainer.appendChild(secondaryDisplay);
+
+    // display the rest of the video description on click
+    const showMoreButton = document.querySelector('.js-show-more-button');
+    showMoreButton.addEventListener('click', () => {
+        const videoDescriptionText = document.querySelector('.js-video-description-text');
+        
+        if (showMoreButton.textContent.includes('more')) {
+            showMoreButton.textContent = 'Show less';
+            videoDescriptionText.innerHTML = formatTextDescription(video, true);
+        } else {
+            showMoreButton.textContent = '...more';
+            videoDescriptionText.innerHTML = formatTextDescription(video, false);
+        }
+        
+    });
+
+    if (video.snippet.description.length < 180) {
+        showMoreButton.style.display = 'none';
+    }
 }
