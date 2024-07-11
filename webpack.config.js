@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
     entry: {
@@ -59,7 +60,8 @@ module.exports = {
             filename: 'display.html',
             template: './src/html/display.html',
             chunks: ['display']
-        })
+        }),
+        new Dotenv({ path: './constants.env' }),
     ],
 
     devServer: {
@@ -73,5 +75,12 @@ module.exports = {
         hot: true, // Enable hot module replacement
         
     }, 
-    mode: 'development'
+    mode: 'development',
+
+    resolve: {
+        fallback: {
+            "fs": false,
+            "path": false
+        }
+    }
 };

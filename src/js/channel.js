@@ -1,3 +1,4 @@
+import { YOUTUBE_API_KEY } from "./videos.js";
 export let accessParameters=[];
 
 class Channel {
@@ -43,7 +44,7 @@ class Channel {
 }
 
 export async function loadChannelInfo(channelId) {
-    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2C%20statistics&id=${channelId}&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`).then((response) => {
+    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2C%20statistics&id=${channelId}&key=${YOUTUBE_API_KEY}`).then((response) => {
         // response is a json object
         return response.json();
     }).then((data) => {
@@ -55,7 +56,7 @@ export async function loadChannelInfo(channelId) {
 }
 
 export async function loadOwnChannelInfo(access_token) {
-    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails%2C%20status%2C%20contentOwnerDetails%2C%20id%2C%20localizations%2C%20snippet%2C%20statistics&mine=true&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`, {
+    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/channels?part=contentDetails%2C%20status%2C%20contentOwnerDetails%2C%20id%2C%20localizations%2C%20snippet%2C%20statistics&mine=true&key=${YOUTUBE_API_KEY}`, {
         headers: {
             Authorization: `Bearer ${access_token}`
         }
@@ -108,12 +109,12 @@ export function handleAuthResponse() {
 }
 
 export function makeAuthenticationRequest()  {
-    
     // the request returns the token directly so no need for POST request to oauth server
-    const clientId = '207479931415-f6b8ueau28chlg0vruli2vufqnq6bfg6.apps.googleusercontent.com';
-    const redirectUrl = 'http://127.0.0.1:5500/youtube.html';
+    const client_id = process.env.client_id;
+    const redirect_uri = process.env.redirect_uri;
+ 
     const scope = 'https://www.googleapis.com/auth/youtube.readonly';
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope}&response_type=token`;
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&response_type=token`;
 
     // set the current url in sessionStorage
     sessionStorage.setItem('url_before_login', window.location.href);

@@ -1,6 +1,8 @@
 export let searchVideos = [];
 export let homeVideos = [];
 
+export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+
 export class Video {
     kind; // kind can be search result or possibly trending, we'll figure that out later
     etag;
@@ -99,7 +101,6 @@ export class Video {
     #formatCount(count) {
         let viewCounts = parseInt(count, 10) || 0;
         if (viewCounts) {
-            console.log(viewCounts);
             if (viewCounts < 1000) {
                 return viewCounts;
             } else if (viewCounts < 1000000) {
@@ -115,7 +116,6 @@ export class Video {
     }
 
     formatDescription(displayFull) {
-        console.log(this.snippet.description);
         const paragraphs = this.snippet.description.split(/\n\n+/);
 
         const sentences = [];
@@ -126,8 +126,7 @@ export class Video {
         });
 
         let description = '';
-        console.log(paragraphs);
-        console.log(sentences);
+
         if (this.snippet.description.length > 180) {
             if (displayFull) {
                 description = this.snippet.description;
@@ -161,7 +160,7 @@ export class Video {
 
     async loadStatistics() {
         try {
-            const response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${this.getId()}&maxResults=5&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`);
+            const response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${this.getId()}&maxResults=5&key=${YOUTUBE_API_KEY}`);
             const data = await response.json();
             return data.items[0].statistics;
         } catch (error) {
@@ -193,14 +192,13 @@ export async function loadSearchedVideos(queryString, regionCode) {
         console.log('no default region code');
         regionCode = 'BE'; // default to Belgium if no regionCode is provided
     }
-    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=49&order=relevance&q=${queryString}&type=video&regionCode=${regionCode}&videoCaption=any&videoDefinition=any&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`).then((response) => {
+    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=49&order=relevance&q=${queryString}&type=video&regionCode=${regionCode}&videoCaption=any&videoDefinition=any&key=${YOUTUBE_API_KEY}`).then((response) => {
         // response is a json object
         return response.json();
     }).then((data) => {
         searchVideos = data.items.map((details) => {
             return new Video(details);
         });
-        console.log(searchVideos);
     }).catch((error) => {
         console.log(error);
     });
@@ -208,11 +206,10 @@ export async function loadSearchedVideos(queryString, regionCode) {
 }
 
 export async function loadPopularVideos() {
-    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails%2C%20snippet%2C%20statistics&chart=mostPopular&maxResults=49&regionCode=BE&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`).then((response) => {
+    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails%2C%20snippet%2C%20statistics&chart=mostPopular&maxResults=49&regionCode=BE&key=${YOUTUBE_API_KEY}`).then((response) => {
         // response is a json object
         return response.json();
     }).then((data) => {
-        console.log(data);
         homeVideos = data.items.map((details) => {
             return new Video(details);
         });
@@ -223,7 +220,7 @@ export async function loadPopularVideos() {
 }
 
 export async function loadFromVideoId(videoId) {
-    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails%2C%20snippet%2C%20statistics%2C%20player%2C%20status&id=${videoId}&key=AIzaSyAkuaLdNIusoCt62EVFVEx8l4n2-xRFtJc`)
+    const promise = fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails%2C%20snippet%2C%20statistics%2C%20player%2C%20status&id=${videoId}&key=${YOUTUBE_API_KEY}`)
         .then((response) => {
             return response.json();
         }).then((data) => {

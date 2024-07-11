@@ -18,14 +18,13 @@ try {
         displayValue = '';
     }
 
-    console.log(displayValue);
     renderDisplayPage(displayValue);
+
 } catch (error) {
     console.log(error);
 }
 let fullDescription = '';
 function formatTextDescription(video, displayValue) {
-    console.log(video);
     return video.formatDescription(displayValue);
 }
 
@@ -34,13 +33,9 @@ async function renderDisplayPage(displayValue) {
     const displayContainer = document.querySelector('.js-display-container');
 
     const svgs = returnSVGS();
-    console.log(svgs);
     const video = await loadFromVideoId(displayValue);
-    console.log(video);
-    console.log(video.player.embedHtml);
 
     const channelInfo = await loadChannelInfo(video.loadChannelId());
-    console.log(channelInfo);
 
     // Primary display - video, video statistics and comments
     let primaryDisplay = document.createElement('div');
