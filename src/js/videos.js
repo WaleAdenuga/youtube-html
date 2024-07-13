@@ -3,7 +3,7 @@ export let homeVideos = [];
 
 export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
-export class Video {
+class Video {
     kind; // kind can be search result or possibly trending, we'll figure that out later
     etag;
     id; // contains kind and videoId

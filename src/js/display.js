@@ -6,6 +6,7 @@ import { renderHeaderCases } from "./general-layout/header.js";
 import { returnSVGS } from "./general-layout/imports.js";
 import { loadFromVideoId } from "./videos.js";
 import { loadChannelInfo } from "./channel.js";
+import { loadVideoComments, getCommentReplies } from "./comment.js";
 
 
 try {
@@ -23,7 +24,6 @@ try {
 } catch (error) {
     console.log(error);
 }
-let fullDescription = '';
 function formatTextDescription(video, displayValue) {
     return video.formatDescription(displayValue);
 }
@@ -150,45 +150,7 @@ async function renderDisplayPage(displayValue) {
                     </div>
                 </div>
             </div>
-            <div class="video-comments-list-container">
-                <div class="video-comment">
-                    <img class="commenter-avatar" src="../../downloaded_images/channel-pictures/channel-3.jpeg">
-
-                    <div class="comment-information">
-
-                        <div class="comment-info">
-                            <div class="commenter-username">
-                                @ThyWillBeDone001
-                            </div>
-                            <div class="comment-date">
-                                3 years ago
-                            </div>
-                        </div>
-
-                        <div class="comment-text">
-                            This guy is collecting tech CEO interviews like Thanos collected the infinity stones.
-                        </div>
-
-                        <div class="comment-interactions">
-                            <button class="comment-like-button" >
-                                <img class="comment-like-pic" src="${svgs['like-icon.svg']}">
-                            </button>
-                            <div class="comment-like-count">5.9K</div>
-                            <button class="comment-dislike-button">
-                                <img class="comment-dislike-pic" src="${svgs['dislike-icon.svg']}">
-                            </button>
-                            <button class="comment-reply-button">
-                                Reply
-                            </button>
-                        </div>
-
-                        <button class="reply-interaction-button">
-                            <img class="reply-pic" src="${svgs['nav-arrow-down.svg']}">
-                            34 replies
-                        </button>
-                    </div>
-
-                </div>
+            <div class="video-comments-list-container js-video-comments-list-container">
 
             </div>
         </div>
@@ -198,6 +160,32 @@ async function renderDisplayPage(displayValue) {
 
     displayContainer.appendChild(primaryDisplay);
 
+    displayContainer.appendChild(renderSecondaryDisplay(video, channelInfo));
+
+    // display the rest of the video description on click
+    const showMoreButton = document.querySelector('.js-show-more-button');
+    showMoreButton.addEventListener('click', () => {
+        const videoDescriptionText = document.querySelector('.js-video-description-text');
+        
+        if (showMoreButton.textContent.includes('more')) {
+            showMoreButton.textContent = 'Show less';
+            videoDescriptionText.innerHTML = formatTextDescription(video, true);
+        } else {
+            showMoreButton.textContent = '...more';
+            videoDescriptionText.innerHTML = formatTextDescription(video, false);
+        }
+        
+    });
+
+    if (video.snippet.description.length < 180) {
+        showMoreButton.style.display = 'none';
+    }
+
+    // load comments when the page loads
+    renderComments(video, svgs);
+}
+
+function renderSecondaryDisplay(video, channelInfo) {
     // Secondary display - contains related videos to the one shown
     let secondaryDisplay = document.createElement('div');
     // secondaryDisplay.classList.add('secondary-display');
@@ -416,24 +404,198 @@ async function renderDisplayPage(displayValue) {
     </div>
     `;
 
-    displayContainer.appendChild(secondaryDisplay);
+    return secondaryDisplay;
+}
 
-    // display the rest of the video description on click
-    const showMoreButton = document.querySelector('.js-show-more-button');
-    showMoreButton.addEventListener('click', () => {
-        const videoDescriptionText = document.querySelector('.js-video-description-text');
+async function renderComments(video, svgs) {
+    let commentResponse = await loadVideoComments(video.getId());
+    renderCommentsExtra(commentResponse, svgs);    
+
+    // Scroll event listener
+    window.addEventListener('scroll', async () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            // Load next set of elements if not already loaded all
+            let token = commentResponse.nextPageToken;
+            console.log('token', token);
+            if(token) {
+                commentResponse = await loadVideoComments(video.getId(), token);
+                console.log(commentResponse);
+                renderCommentsExtra(commentResponse, svgs);
+            }
+        }
+    });
+}
+
+function renderCommentsExtra(commentResponse, svgs) {
+    const commentsContainer = document.querySelector('.js-video-comments-list-container');
+    commentsContainer.innerHTML = '';
+    console.log(commentResponse);
+
+    commentResponse.videoComments.forEach((comment) => {
+        // Comments section - contains user comments
+        let videoComment = document.createElement('div');
+        videoComment.classList.add('video-comment');
+
+        videoComment.innerHTML = `
+        <img class="commenter-avatar" src=${comment.loadCommentAuthorProfileImageUrl()}>
+
+        <div class="comment-information">
+
+            <div class="comment-info">
+                <div class="commenter-username">
+                    ${comment.loadCommentAuthorChannelDisplayName()}
+                </div>
+                <div class="comment-date">
+                    ${comment.loadCommentPublishedAt()}
+                </div>
+            </div>
+
+            <div class="comment-text">
+                ${comment.loadCommentTextDisplay()}
+            </div>
+
+            <div class="comment-interactions">
+                <button class="comment-like-button" >
+                    <img class="comment-like-pic" src="${svgs['like-icon.svg']}">
+                </button>
+                <div class="comment-like-count js-comment-like-count">${comment.loadCommentLikeCount()}</div>
+                <button class="comment-dislike-button">
+                    <img class="comment-dislike-pic" src="${svgs['dislike-icon.svg']}">
+                </button>
+                <button class="comment-reply-button">
+                    Reply
+                </button>
+            </div>
+
+            <button class="reply-interaction-button js-reply-interaction-button-${comment.loadCommentId()}" data-comment-id="${comment.loadCommentId()}">
+                <img class="reply-pic js-reply-pic-${comment.loadCommentId()}" src="${svgs['nav-arrow-down.svg']}">
+                ${formatReplies(comment.loadRepliesNumber())}
+            </button>
+
+            <div class="replies-section js-replies-section-${comment.loadCommentId()}" style="display: none;">
+                <!-- Replies section - contains user replies -->
+
+            </div>
+
+        </div>
+
+        `
+
+        commentsContainer.appendChild(videoComment);
+
+        document.querySelectorAll('.js-comment-like-count').forEach((element) => {
+            if(element.innerHTML.includes('undefined')) {
+                element.style.display = 'none';
+            }
+        }); 
+
+        // remove the replies button if there are no replies
+        // TODO: Could this be done with querySelectorAll instead
+        const interactionButton = document.querySelector(`.js-reply-interaction-button-${comment.loadCommentId()}`);
+        if (interactionButton.innerHTML.includes('undefined')) {
+            interactionButton.style.display = 'none';
+        }
+        interactionButton.addEventListener('click', async () => {
+            // Show or hide replies
+            const repliesSection = document.querySelector(`.js-replies-section-${comment.loadCommentId()}`);
+            const replyPic = document.querySelector(`.js-reply-pic-${comment.loadCommentId()}`);
+            if (repliesSection.style.display === 'none') {
+                replyPic.style.transform = 'rotate(180deg)';
+                repliesSection.style.display = 'flex';
+
+                renderRepliesSection(comment.loadCommentId(), svgs, repliesSection);
+                
+            } else {
+                repliesSection.style.display = 'none';
+                replyPic.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+}
+
+async function renderRepliesSection(commentId, svgs, repliesSection) {
+    let commentReplies = await getCommentReplies(commentId);
+    console.log(commentReplies);
+
+    renderRepliesSectionExtra(commentReplies, svgs, repliesSection, commentId);
+}
+
+function renderRepliesSectionExtra(commentReplies, svgs, repliesSection, commentId) {
+    repliesSection.innerHTML = '';
+    if (commentReplies.videoCommentReplies) {
+        commentReplies.videoCommentReplies.forEach((reply) => {
+            const replyDiv = document.createElement('div');
+            replyDiv.classList.add('reply');
+            replyDiv.innerHTML = `
+
+            <img class="replier-avatar" src=${reply.loadCommentAuthorProfileImageUrl()}>
+
+            <div class="comment-information">
+
+                <div class="comment-info">
+                <div class="commenter-username">
+                    ${reply.loadCommentAuthorChannelDisplayName()}
+                </div>
+                <div class="comment-date">
+                    ${reply.loadCommentPublishedAt()}
+                </div>
+                </div>
+
+                <div class="comment-text">
+                ${reply.loadCommentTextDisplay()}
+                </div>
+
+                <div class="comment-interactions">
+                <button class="comment-like-button">
+                    <img class="comment-like-pic" src="${svgs['like-icon.svg']}">
+                </button>
+                <div class="comment-like-count js-comment-like-count">${reply.loadCommentLikeCount()}</div>
+                <button class="comment-dislike-button">
+                    <img class="comment-dislike-pic" src="${svgs['dislike-icon.svg']}">
+                </button>
+                <button class="comment-reply-button">
+                    Reply
+                </button>
+                </div>
+            </div>
+        `
+        repliesSection.appendChild(replyDiv);
+        });
         
-        if (showMoreButton.textContent.includes('more')) {
-            showMoreButton.textContent = 'Show less';
-            videoDescriptionText.innerHTML = formatTextDescription(video, true);
+        if(commentReplies.nextPageTokenReplies) {
+            const showMoreReplies = document.createElement('button');
+            showMoreReplies.classList.add('show-more-replies-button');
+            showMoreReplies.classList.add('js-show-more-replies-button');
+            showMoreReplies.textContent = 'Show More Replies';
+            showMoreReplies.style.fontWeight = '500';
+            showMoreReplies.style.fontFamily = 'Roboto, Arial';
+            showMoreReplies.style.padding = '8px 10px';
+            showMoreReplies.style.display = 'flex';
+            repliesSection.appendChild(showMoreReplies);
+
+
+            showMoreReplies.addEventListener('click', async () => {
+                let token = commentReplies.nextPageTokenReplies;
+                commentReplies = await getCommentReplies(commentId, token);
+                console.log(commentReplies);
+                renderRepliesSectionExtra(commentReplies, svgs, repliesSection);
+            });
         } else {
-            showMoreButton.textContent = '...more';
-            videoDescriptionText.innerHTML = formatTextDescription(video, false);
+            // showMoreReplies.style.display = 'none';
         }
         
-    });
+    }
 
-    if (video.snippet.description.length < 180) {
-        showMoreButton.style.display = 'none';
+    document.querySelectorAll('.js-comment-like-count').forEach((element) => {
+        if(element.innerHTML.includes('undefined')) {
+            element.style.display = 'none';
+        }
+    }); 
+}
+
+function formatReplies(replies) {
+    // Format replies text based on number of replies
+    if (replies !== 0) {
+        return replies === 1 ? `${replies} reply` : `${replies} replies`;
     }
 }
