@@ -1,6 +1,8 @@
 export let searchVideos = [];
 export let homeVideos = [];
 
+let relatedVideos = [];
+
 export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
 class Video {
@@ -21,13 +23,7 @@ class Video {
         this.id = videoDetails.id;
         this.snippet = videoDetails.snippet;
         this.contentDetails = videoDetails.contentDetails;
-        if (videoDetails.statistics) {
-            this.statistics = videoDetails.statistics;
-        } else {
-            this.loadStatistics().then((response) => {
-                this.statistics = response;
-            });    
-        }
+        this.statistics = videoDetails.statistics;
         this.status = videoDetails.status;
         this.player = videoDetails.player;
     }
@@ -58,24 +54,29 @@ class Video {
     }
 
     formatDuration() {
-        const momentDuration = moment.duration(this.contentDetails.duration);
-        const hours = Math.floor(momentDuration.asHours());
-        const minutes = momentDuration.minutes();
-        const seconds = momentDuration.seconds();
-        
-        let formattedDuration;
-        if (hours >= 24) {
-            const days = Math.floor(hours / 24);
-            const remainingHours = hours % 24;
-            const totalHours = (days*24) + remainingHours;
-            formattedDuration = `${totalHours}:${minutes}:${seconds}`;
-        } else if (hours > 0) {
-            formattedDuration = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        } else {
-            formattedDuration = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        try {
+            const momentDuration = moment.duration(this.contentDetails.duration);
+            const hours = Math.floor(momentDuration.asHours());
+            const minutes = momentDuration.minutes();
+            const seconds = momentDuration.seconds();
+
+            let formattedDuration;
+            if (hours >= 24) {
+                const days = Math.floor(hours / 24);
+                const remainingHours = hours % 24;
+                const totalHours = (days * 24) + remainingHours;
+                formattedDuration = `${totalHours}:${minutes}:${seconds}`;
+            } else if (hours > 0) {
+                formattedDuration = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            } else {
+                formattedDuration = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            }
+
+            return formattedDuration;
+        } catch (error) {
+            console.log(error);
         }
-        
-        return formattedDuration;
+
     }
 
     formatViewCounts() {
@@ -158,15 +159,36 @@ class Video {
         }
     }
 
-    async loadStatistics() {
+    loadStatistics() {
         try {
-            const response = await fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${this.getId()}&maxResults=5&key=${YOUTUBE_API_KEY}`);
-            const data = await response.json();
-            return data.items[0].statistics;
+            return fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${this.getId()}&maxResults=5&key=${YOUTUBE_API_KEY}`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.statistics = data.items[0].statistics;
+            })
         } catch (error) {
             console.log(error);
         }
         
+    }
+
+    loadContentDetails() {
+        try {
+            return fetch(`https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails&id=${this.getId()}&maxResults=1&key=${YOUTUBE_API_KEY}`).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.contentDetails = data.items[0].contentDetails;
+            })
+        } catch (error) {
+            console.log(error);
+        } 
+    }
+
+    async ensureLoaded() {
+        if (!this.contentDetails ||!this.statistics) {
+            await this.loadContentDetails();
+            await this.loadStatistics();
+        }
     }
 
     loadTitle() {
@@ -195,10 +217,12 @@ export async function loadSearchedVideos(queryString, regionCode) {
     const promise = fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=49&order=relevance&q=${queryString}&type=video&regionCode=${regionCode}&videoCaption=any&videoDefinition=any&key=${YOUTUBE_API_KEY}`).then((response) => {
         // response is a json object
         return response.json();
-    }).then((data) => {
+    }).then(async (data) => {
         searchVideos = data.items.map((details) => {
             return new Video(details);
         });
+        // Ensure all videos are fully loaded with content details and statistics before returning them
+        await Promise.all(searchVideos.map((video) => video.ensureLoaded()));
     }).catch((error) => {
         console.log(error);
     });
@@ -230,6 +254,41 @@ export async function loadFromVideoId(videoId) {
         });
 
     return promise;
+}
+
+// Load a couple from the channel (use the search apparently), load a couple with the tags of the video, maybe have a limit like 20
+// Parameters is video type
+export async function loadRelatedVideos(video) {
+    // First load 10 videos (but there are shorts etc) from the channel
+    // Then load 10 videos with the same tags as the current video or search for the title
+    const videoId = video.getId();
+    const channelId = video.loadChannelId();
+
+    const response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=10&order=relevance&regionCode=BE&key=${YOUTUBE_API_KEY}`).then((response) => {return response.json()});
+
+    // Make sure search result displayed in related video doesn't contain the current video being displayed + not a playlist (TODO: add support for playlist)
+    // Map each item to a Video type for easy access
+    relatedVideos = response.items.filter((item) => {
+        return (item.id.videoId!== videoId) && (item.id.kind === 'youtube#video');
+    }).map((details) => {
+        return new Video(details);
+    });
+    let remainingLength = 20 - relatedVideos.length;
+    // Load the remaining videos with the same tags as the current video or search for the title
+    // If there are no more videos to load, just return the current list
+    if (remainingLength > 0) {
+        const searchResponse = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${video.loadTitle()}&type=video &regionCode=BE&maxResults=${remainingLength+1}&key=${YOUTUBE_API_KEY}`).then((response) => {
+            return response.json()
+        });
+        searchResponse.items.filter((item) => {
+            return (item.id.kind === 'youtube#video') && (item.id.videoId!== videoId);
+        }).map((details) => {
+            relatedVideos.push(new Video(details));
+        });
+    }
+    // Ensure all related videos are fully loaded with statistics and content details before returning them
+    await Promise.all(relatedVideos.map((video) => video.ensureLoaded()));
+    return relatedVideos;
 }
 
 /* await loadSearchedVideos();

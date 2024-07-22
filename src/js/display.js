@@ -4,7 +4,7 @@ import "../styles/display.css";
 
 import { renderHeaderCases } from "./general-layout/header.js";
 import { returnSVGS } from "./general-layout/imports.js";
-import { loadFromVideoId } from "./videos.js";
+import { loadFromVideoId, loadRelatedVideos } from "./videos.js";
 import { loadChannelInfo } from "./channel.js";
 import { loadVideoComments, getCommentReplies } from "./comment.js";
 
@@ -103,7 +103,7 @@ async function renderDisplayPage(displayValue) {
                 </div>
             </div>
 
-            <div class="video-description-container">
+            <div class="video-description-container js-video-description-container">
                 <div class="current-video-stats-basic">
                     ${video.formatDisplayViewCount()} views &nbsp; ${video.formatDatePosted()}
                 </div>
@@ -160,22 +160,13 @@ async function renderDisplayPage(displayValue) {
 
     displayContainer.appendChild(primaryDisplay);
 
-    displayContainer.appendChild(renderSecondaryDisplay(video, channelInfo));
+    renderSecondaryDisplay(displayContainer, video);
 
     // display the rest of the video description on click
     const showMoreButton = document.querySelector('.js-show-more-button');
-    showMoreButton.addEventListener('click', () => {
-        const videoDescriptionText = document.querySelector('.js-video-description-text');
-        
-        if (showMoreButton.textContent.includes('more')) {
-            showMoreButton.textContent = 'Show less';
-            videoDescriptionText.innerHTML = formatTextDescription(video, true);
-        } else {
-            showMoreButton.textContent = '...more';
-            videoDescriptionText.innerHTML = formatTextDescription(video, false);
-        }
-        
-    });
+    showMoreButton.addEventListener('click', handleDescriptionClick(video));
+    const descriptionContainer = document.querySelector('.js-video-description-container');
+    descriptionContainer.addEventListener('click', handleDescriptionClick(video));
 
     if (video.snippet.description.length < 180) {
         showMoreButton.style.display = 'none';
@@ -185,226 +176,67 @@ async function renderDisplayPage(displayValue) {
     renderComments(video, svgs);
 }
 
-function renderSecondaryDisplay(video, channelInfo) {
+function handleDescriptionClick(video) {
+    return () => {
+        const videoDescriptionText = document.querySelector('.js-video-description-text');
+        const showMoreButton = document.querySelector('.js-show-more-button');
+
+        if (showMoreButton.textContent.includes('more')) {
+            showMoreButton.textContent = 'Show less';
+            videoDescriptionText.innerHTML = formatTextDescription(video, true);
+        } else {
+            showMoreButton.textContent = '...more';
+            videoDescriptionText.innerHTML = formatTextDescription(video, false);
+        }
+    }
+
+}
+
+async function renderSecondaryDisplay(displayContainer, video) {
     // Secondary display - contains related videos to the one shown
-    let secondaryDisplay = document.createElement('div');
-    // secondaryDisplay.classList.add('secondary-display');
-    // secondaryDisplay.classList.add('js-secondary-display');
 
-    secondaryDisplay.innerHTML = `
-    <div class="related-video-preview">
-        <div class="related-thumbnail-row">
-            <!-- img is a void element, no closing tag required -->
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY">
-                <img class="thumbnail" src="../../downloaded_images/thumbnails/thumbnail-1.webp">
-            </a>
-            <div class="related-video-time">
-                14:20
+    const relatedVideos = await loadRelatedVideos(video);
+
+    // had to set timeout because page starts rendering before all information is gotten from the server
+    let secondaryDisplayContainer = document.createElement('div');
+    secondaryDisplayContainer.classList.add('secondary-display');
+    secondaryDisplayContainer.classList.add('js-secondary-display');
+
+    relatedVideos.forEach((video) => {
+        let secondaryDisplay = document.createElement('div');
+        secondaryDisplay.innerHTML = `
+        <div class="related-video-preview">
+            <div class="related-thumbnail-row">
+                <a href="https://www.youtube.com/watch?v=${video.getId()}">
+                    <img class="thumbnail" src=${video.loadThumbnailUrl()}>
+                </a>
+                <div class="related-video-time">
+                    ${video.formatDuration()}
+                </div>
+
+            </div>
+
+            <div class="related-video-info">
+                <a href="https://www.youtube.com/watch?v=${video.getId()}" class="related-video-title-link">
+                    <p class="video-title">
+                        ${video.loadTitle()}
+                    </p>
+                </a>
+
+                <p class="video-author">
+                    ${video.loadChannelTitle()}
+                </p>
+                <p class="video-stats">
+                    ${video.formatViewCounts()} views &#183; ${video.formatDatePosted()}
+                </p>
             </div>
 
         </div>
+        `;
+        secondaryDisplayContainer.appendChild(secondaryDisplay);
 
-        <div class="related-video-info">
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY" class="related-video-title-link">
-                <p class="video-title">
-                    Talking Tech and AI with Google CEO Sundar Pichai!
-                </p>
-            </a>
-
-            <p class="video-author">
-                Marques Brownlee
-            </p>
-            <p class="video-stats">
-                3.4M views &#183; 6 months ago
-            </p>
-        </div>
-
-    </div>
-
-
-    <div class="related-video-preview">
-        <div class="related-thumbnail-row">
-            <!-- img is a void element, no closing tag required -->
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY">
-                <img class="thumbnail" src="../../downloaded_images/thumbnails/thumbnail-1.webp">
-            </a>
-            <div class="related-video-time">
-                14:20
-            </div>
-
-        </div>
-
-        <div class="related-video-info">
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY" class="related-video-title-link">
-                <p class="video-title">
-                    Talking Tech and AI with Google CEO Sundar Pichai!
-                </p>
-            </a>
-
-            <p class="video-author">
-                Marques Brownlee
-            </p>
-            <p class="video-stats">
-                3.4M views &#183; 6 months ago
-            </p>
-        </div>
-
-    </div>
-
-
-    <div class="related-video-preview">
-        <div class="related-thumbnail-row">
-            <!-- img is a void element, no closing tag required -->
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY">
-                <img class="thumbnail" src="../../downloaded_images/thumbnails/thumbnail-1.webp">
-            </a>
-            <div class="related-video-time">
-                14:20
-            </div>
-
-        </div>
-
-        <div class="related-video-info">
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY" class="related-video-title-link">
-                <p class="video-title">
-                    Talking Tech and AI with Google CEO Sundar Pichai!
-                </p>
-            </a>
-
-            <p class="video-author">
-                Marques Brownlee
-            </p>
-            <p class="video-stats">
-                3.4M views &#183; 6 months ago
-            </p>
-        </div>
-
-    </div>
-
-
-
-    <div class="related-video-preview">
-        <div class="related-thumbnail-row">
-            <!-- img is a void element, no closing tag required -->
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY">
-                <img class="thumbnail" src="../../downloaded_images/thumbnails/thumbnail-1.webp">
-            </a>
-            <div class="related-video-time">
-                14:20
-            </div>
-
-        </div>
-
-        <div class="related-video-info">
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY" class="related-video-title-link">
-                <p class="video-title">
-                    Talking Tech and AI with Google CEO Sundar Pichai!
-                </p>
-            </a>
-
-            <p class="video-author">
-                Marques Brownlee
-            </p>
-            <p class="video-stats">
-                3.4M views &#183; 6 months ago
-            </p>
-        </div>
-
-    </div>
-
-
-
-    <div class="related-video-preview">
-        <div class="related-thumbnail-row">
-            <!-- img is a void element, no closing tag required -->
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY">
-                <img class="thumbnail" src="../../downloaded_images/thumbnails/thumbnail-1.webp">
-            </a>
-            <div class="related-video-time">
-                14:20
-            </div>
-
-        </div>
-
-        <div class="related-video-info">
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY" class="related-video-title-link">
-                <p class="video-title">
-                    Talking Tech and AI with Google CEO Sundar Pichai!
-                </p>
-            </a>
-
-            <p class="video-author">
-                Marques Brownlee
-            </p>
-            <p class="video-stats">
-                3.4M views &#183; 6 months ago
-            </p>
-        </div>
-
-    </div>
-
-
-
-    <div class="related-video-preview">
-        <div class="related-thumbnail-row">
-            <!-- img is a void element, no closing tag required -->
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY">
-                <img class="thumbnail" src="../../downloaded_images/thumbnails/thumbnail-1.webp">
-            </a>
-            <div class="related-video-time">
-                14:20
-            </div>
-
-        </div>
-
-        <div class="related-video-info">
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY" class="related-video-title-link">
-                <p class="video-title">
-                    Talking Tech and AI with Google CEO Sundar Pichai!
-                </p>
-            </a>
-
-            <p class="video-author">
-                Marques Brownlee
-            </p>
-            <p class="video-stats">
-                3.4M views &#183; 6 months ago
-            </p>
-        </div>
-
-    </div>
-
-    <div class="related-video-preview">
-        <div class="related-thumbnail-row">
-            <!-- img is a void element, no closing tag required -->
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY">
-                <img class="thumbnail" src="../../downloaded_images/thumbnails/thumbnail-1.webp">
-            </a>
-            <div class="related-video-time">
-                14:20
-            </div>
-
-        </div>
-
-        <div class="related-video-info">
-            <a href="https://www.youtube.com/watch?v=n2RNcPRtAiY" class="related-video-title-link">
-                <p class="video-title">
-                    Talking Tech and AI with Google CEO Sundar Pichai!
-                </p>
-            </a>
-
-            <p class="video-author">
-                Marques Brownlee
-            </p>
-            <p class="video-stats">
-                3.4M views &#183; 6 months ago
-            </p>
-        </div>
-
-    </div>
-    `;
-
-    return secondaryDisplay;
+    });
+    displayContainer.appendChild(secondaryDisplayContainer);
 }
 
 async function renderComments(video, svgs) {
